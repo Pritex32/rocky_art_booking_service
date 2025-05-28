@@ -40,6 +40,29 @@ def get_supabase_client():
 # Initialize Supabase client
 supabase = get_supabase_client() # use this to call the supabase database
 
+def upload_file_to_supabase(file, bucket_name="bookingsbucket"):
+    try:
+        # Read file bytes
+        file_bytes = file.read()
+        
+        # Create unique filename to avoid overwriting, e.g. prefix with timestamp
+        import time, os
+        filename = f"{int(time.time())}_{file.name}"
+        
+        # Upload file bytes to Supabase storage bucket
+        response = supabase.storage.from_(bucket_name).upload(filename, file_bytes)
+        
+        if response.get("error") is not None:
+            st.error(f"Failed to upload file: {response['error']['message']}")
+            return None
+        
+        # Get public URL for the uploaded file
+        public_url = supabase.storage.from_(bucket_name).get_public_url(filename)
+        return public_url
+        
+    except Exception as e:
+        st.error(f"Exception during file upload: {e}")
+        return None
 
 
 
@@ -90,11 +113,11 @@ def submit_booking(name, email, service, deadline, details, price, currency):
         "email": email,
         "service": service,
         'location': location,
-        'phone_number': phone_number,
-        "deadline": deadline,
+        'phone_number': str(phone_number),
+        "deadline": str(deadline),
         "details": details,
         "file_url": "",
-        "price": price,
+        "price":float( price),
         "currency": currency  # New column, add to your supabase table!
     }
 
@@ -136,6 +159,11 @@ if choice == "Book a Service":
 
         deadline = st.date_input("Deadline")
         details = st.text_area("Project Details / Description")
+        # File uploader for reference file
+        reference_file = st.file_uploader("Upload Reference File (optional)", type=['png', 'jpg', 'jpeg', 'pdf', 'mp4', 'mov'])
+
+        # URL input for reference link
+        reference_url = st.text_input("Or enter a Reference URL (optional)")
 
         price = convert_price(services_usd[service], currency)
         symbol = "$" if currency == "USD" else "₦"
@@ -146,6 +174,15 @@ if choice == "Book a Service":
             if not name or not email:
                 st.error("Please fill in all required fields.")
             else:
+                file_url = ""
+                if reference_file is not None:
+                    uploaded_url_obj = upload_file_to_supabase(reference_file)
+                if uploaded_url_obj is not None:
+                    file_url = uploaded_url_obj.get("publicUrl", "")  # public URL string
+                if reference_url:
+                    file_url = reference_url
+            
+            
                 data = {
                     "name": name,
                     "email": email,
@@ -154,7 +191,7 @@ if choice == "Book a Service":
                     'phone_number':str(phone_number),
                     "deadline":str(deadline),
                     "details": details,
-                    "file_url": "",
+                    "file_url":file_url,
                     "price": float(price),
                     "currency": currency
                 }
