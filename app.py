@@ -172,10 +172,10 @@ elif choice == "Admin Dashboard":
         st.success("Access granted")
         # Fetch bookings
         response = supabase.table("bookings").select("*").order("created_at", desc=True).execute()
-       if response.error is None:
-           bookings = response.data
-       else:
-           st.error(f"Failed to retrieve bookings: {response.error.message}")
+        if response.error is None:
+            bookings = response.data
+        else:
+            st.error(f"Failed to retrieve bookings: {response.error.message}")
 
             if bookings:
                 for b in bookings:
