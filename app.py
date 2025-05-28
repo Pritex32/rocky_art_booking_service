@@ -316,9 +316,6 @@ elif choice == "Admin Dashboard":
         response = supabase.table("bookings").select("*").order("created_at", desc=True).execute()
         if response.data:
             bookings = response.data
-        else:
-            st.error(f"Failed to retrieve bookings: {response.error.message}")
-
             if bookings:
                 for b in bookings:
                     st.markdown(f"**Name:** {b['name']}")
@@ -330,7 +327,8 @@ elif choice == "Admin Dashboard":
                     st.markdown("---")
             else:
                 st.info("No bookings found.")
-        
+        else:
+            st.error(f"Failed to retrieve bookings: {response.error.message}")
     else:
         if password:
             st.error("Incorrect password.")
