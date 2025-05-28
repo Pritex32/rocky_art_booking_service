@@ -189,7 +189,6 @@ if not st.session_state.logged_in:
     st.session_state.menu_page = choice
 else:
     st.session_state.menu_page = "Admin Dashboard"
-)
 choice = st.session_state.menu_page
 
 if choice == "Book a Service":
