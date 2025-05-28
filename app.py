@@ -104,7 +104,7 @@ def submit_booking(name, email, service, deadline, details, price, currency):
     else:
         st.error(f"Failed to submit booking: {response.error.message}")
         return False
-col1,col2=st.colums(2)
+col1,col2=st.columns(2)
 with col1:
     st.title("🎨 Rocky Art Company Booking System")
 with col2:
