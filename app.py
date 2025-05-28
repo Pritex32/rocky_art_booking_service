@@ -295,7 +295,7 @@ if choice == "Admin Login/Register":
             try:
                 response = supabase.table("admins").insert({
                 "username": reg_username,
-               "password": reg_password}).execute()
+               "password_hash": reg_password}).execute()
 
                 if response.data:
                     st.success("Admin registered successfully!")
