@@ -396,7 +396,7 @@ elif choice == "Admin Dashboard":
                             else:
                                 # Call your email + WhatsApp sending function here
                                  st.error(f"Failed to update status: {update_response.error.message}")
-                     st.markdown("---")
+                     
             else:
                 st.info("No bookings found.")
         else:
