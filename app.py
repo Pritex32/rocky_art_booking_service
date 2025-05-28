@@ -151,11 +151,11 @@ if choice == "Book a Service":
                     "email": email,
                     "service": service,
                     'location': location,
-                    'phone_number': phone_number,
-                    "deadline": deadline,
+                    'phone_number':str(phone_number),
+                    "deadline":str(deadline),
                     "details": details,
                     "file_url": "",
-                    "price": price,
+                    "price": float(price),
                     "currency": currency
                 }
                 response = supabase.table("bookings").insert(data).execute()
@@ -172,8 +172,11 @@ elif choice == "Admin Dashboard":
         st.success("Access granted")
         # Fetch bookings
         response = supabase.table("bookings").select("*").order("created_at", desc=True).execute()
-        if response.status_code == 200:
-            bookings = response.data
+       if response.error is None:
+           bookings = response.data
+       else:
+           st.error(f"Failed to retrieve bookings: {response.error.message}")
+
             if bookings:
                 for b in bookings:
                     st.markdown(f"**Name:** {b['name']}")
