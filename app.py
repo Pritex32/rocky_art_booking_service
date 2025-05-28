@@ -128,6 +128,44 @@ def submit_booking(name, email, service, location,phone_number,deadline, details
     else:
         st.error(f"Failed to submit booking: {response.error.message}")
         return False
+
+
+
+import hashlib
+
+# Simple in-memory "database"
+if "admins" not in st.session_state:
+    st.session_state.admins = {}  # store {username: hashed_password}
+if "logged_in" not in st.session_state:
+    st.session_state.logged_in = False
+if "current_user" not in st.session_state:
+    st.session_state.current_user = None
+
+def hash_password(password):
+    return hashlib.sha256(password.encode()).hexdigest()
+
+def register(username, password):
+    if username in st.session_state.admins:
+        st.error("User already exists!")
+    else:
+        st.session_state.admins[username] = hash_password(password)
+        st.success("Admin registered successfully!")
+
+def login(username, password):
+    hashed = hash_password(password)
+    if st.session_state.admins.get(username) == hashed:
+        st.session_state.logged_in = True
+        st.session_state.current_user = username
+        st.success(f"Welcome {username}!")
+    else:
+        st.error("Invalid username or password")
+
+def logout():
+    st.session_state.logged_in = False
+    st.session_state.current_user = None
+    st.success("Logged out successfully")
+
+
 col1,col2=st.columns(2)
 with col1:
     st.title("🎨 Rocky Art Company Booking System")
@@ -137,8 +175,8 @@ with col2:
     resize_img=img.resize((100,100))
     st.write(resize_img)
 
-menu = ["Book a Service", "Admin Dashboard"]
-choice = st.selectbox("Menu", menu)
+menu = ["Book a Service","Admin Login/Register", "Admin Dashboard"]
+choice = st.selectbox("Menu", menu,index=0)
 
 if choice == "Book a Service":
     st.header("Submit a Booking")
@@ -198,7 +236,7 @@ if choice == "Book a Service":
                     "price": price,
                     "currency": currency
                 }
-                st.write(data)
+               
                 response = supabase.table("bookings").insert(data).execute()
                 # Safe error access:
                 error = getattr(response, "error", None)
@@ -208,7 +246,27 @@ if choice == "Book a Service":
                     # If error object has message attribute, else fallback:
                     error_message = getattr(error, "message", str(error))
                     st.error(f"Error: {error_message}")
-            st.write(response)
+            
+
+if choice == "Admin Login/Register":
+    st.header("Admin Login")
+    with st.form("login_form"):
+        login_username = st.text_input("Username")
+        login_password = st.text_input("Password", type="password")
+        login_submitted = st.form_submit_button("Login")
+        if login_submitted:
+            login(login_username, login_password)
+    
+    st.markdown("---")
+    
+    st.header("Admin Registration")
+    with st.form("register_form"):
+        reg_username = st.text_input("New Username")
+        reg_password = st.text_input("New Password", type="password")
+        reg_submit = st.form_submit_button("Register")
+        if reg_submit:
+            register(reg_username, reg_password)
+
 
 
 elif choice == "Admin Dashboard":
