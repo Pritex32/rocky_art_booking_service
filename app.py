@@ -63,24 +63,22 @@ def get_usd_to_ngn_rate():
 
 
 
-services = [
-    "Cartoon Artwork", price
-    "Animated Video", 
-    "Motion Graphics", 
-    "Logo", 
-    "Banner"
-]
+
 services_usd = {
-    "Cartoon Artwork": 100,
-    "Animated Video": 300,
-    "Motion Graphics": 250,
-    "Logo": 150,
-    "Banner": 80
+    'Digital Art portrait': 10,
+    'Video animation (60 secs)': 100,
+    'Motion graphics (60 secs)': 100,
+    'Animated music video (60 secs)': 133,
+    'Logo and brand identity': 33,
+    'E-flier design': 10,
+    'Social media monthly package': 167,
+    'Crypto meme ar': 13,
+    'Crypto meme animation (<30 secs)': 53
 }
 
 # Currency conversion rate
-USD_TO_NGN =get_usd_to_ngn_rate()
-st.metric(f"Current USD to NGN rate: ₦{usd_to_ngn}") # Change if needed
+USD_TO_NGN = get_usd_to_ngn_rate()
+st.metric(f"Current USD to NGN rate: ₦{USD_TO_NGN}")  # Fixed variable name
 
 def convert_price(price_usd, currency):
     if currency == "NGN":
@@ -93,103 +91,97 @@ def submit_booking(name, email, service, deadline, details, price, currency):
         "email": email,
         "service": service,
         'location': location,
-        'phone_number':phone_number,
+        'phone_number': phone_number,
         "deadline": deadline,
         "details": details,
         "file_url": "",
         "price": price,
         "currency": currency  # New column, add to your supabase table!
     }
-   
+
     response = supabase.table("bookings").insert(data).execute()
     if response.error is None:
         return True
     else:
         st.error(f"Failed to submit booking: {response.error.message}")
         return False
-   
-
-
-
-
-
-
 
 st.title("🎨 Rocky Art Company Booking System")
 
-    menu = ["Book a Service", "Admin Dashboard"]
-    choice = st.selectbox("Menu", menu)
+menu = ["Book a Service", "Admin Dashboard"]
+choice = st.selectbox("Menu", menu)
 
-    if choice == "Book a Service":
-        st.header("Submit a Booking")
+if choice == "Book a Service":
+    st.header("Submit a Booking")
 
-        with st.form("booking_form"):
-            name = st.text_input("Full Name")
-            email = st.text_input("Email")
-            phone_number=st.number_input('Phone_number',value=0)
-            service = st.selectbox("Select Service", services)
-            # Currency selector
-            currency = st.selectbox("Select Currency", ["USD", "NGN"])
-            location=st.text_input('Location', value='London')
+    with st.form("booking_form"):
+        name = st.text_input("Full Name")
+        email = st.text_input("Email")
+        phone_number = st.number_input('Phone_number', value=0)
+        currency = st.selectbox("Select Currency", ["USD", "NGN"])
+        location = st.text_input('Location', value='London')
 
-            # Show services with price in selected currency
-            def format_service(service_name):
-                price = convert_price(services_usd[service_name], currency)
-                symbol = "$" if currency == "USD" else "₦"
-                return f"{service_name} - {symbol}{price:,.0f}"
-
-            service = st.selectbox("Select Service", options=list(services_usd.keys()), format_func=format_service)
-
-            deadline = st.date_input("Deadline")
-            details = st.text_area("Project Details / Description")
-
-            price = convert_price(services_usd[service], currency)
+        # Show services with price in selected currency
+        def format_service(service_name):
+            price = convert_price(services_usd[service_name], currency)
             symbol = "$" if currency == "USD" else "₦"
-            st.markdown(f"**Price:** {symbol}{price:,.0f}")
-            submitted = st.form_submit_button("Submit Booking")
+            return f"{service_name} - {symbol}{price:,.0f}"
 
-            if submitted:
-                if not name or not email:
-                    st.error("Please fill in all required fields.")
-                else:
-                    response = supabase.table("bookings").insert(data).execute()
+        service = st.selectbox("Select Service", options=list(services_usd.keys()), format_func=format_service)
 
-                   if response.error is None:
-                     st.success("Booking submitted!")
-                   else:
-                     # error occurred
-                     st.error(f"Error: {response.error.message}")
+        deadline = st.date_input("Deadline")
+        details = st.text_area("Project Details / Description")
 
+        price = convert_price(services_usd[service], currency)
+        symbol = "$" if currency == "USD" else "₦"
+        st.markdown(f"**Price:** {symbol}{price:,.0f}")
+        submitted = st.form_submit_button("Submit Booking")
 
-    elif choice == "Admin Dashboard":
-        st.header("Admin Dashboard")
-        password = st.text_input("Enter admin password", type="password")
-
-        if password == "rockyadmin123":  # Change your admin password here!
-            st.success("Access granted")
-            # Fetch bookings
-            response = supabase.table("bookings").select("*").order("created_at", desc=True).execute()
-            if response.status_code == 200:
-                bookings = response.data
-                if bookings:
-                    for b in bookings:
-                        st.markdown(f"**Name:** {b['name']}")
-                        st.markdown(f"**Email:** {b['email']}")
-                        st.markdown(f"**Service:** {b['service']}")
-                        st.markdown(f"**Deadline:** {b['deadline']}")
-                        st.markdown(f"**Details:** {b['details']}")
-                        st.markdown(f"**Submitted At:** {b['created_at']}")
-                        st.markdown("---")
-                else:
-                    st.info("No bookings found.")
+        if submitted:
+            if not name or not email:
+                st.error("Please fill in all required fields.")
             else:
-                st.error("Failed to fetch bookings.")
+                data = {
+                    "name": name,
+                    "email": email,
+                    "service": service,
+                    'location': location,
+                    'phone_number': phone_number,
+                    "deadline": deadline,
+                    "details": details,
+                    "file_url": "",
+                    "price": price,
+                    "currency": currency
+                }
+                response = supabase.table("bookings").insert(data).execute()
+                if response.error is None:
+                    st.success("Booking submitted!")
+                else:
+                    st.error(f"Error: {response.error.message}")
+
+elif choice == "Admin Dashboard":
+    st.header("Admin Dashboard")
+    password = st.text_input("Enter admin password", type="password")
+
+    if password == "rockyadmin123":  # Change your admin password here!
+        st.success("Access granted")
+        # Fetch bookings
+        response = supabase.table("bookings").select("*").order("created_at", desc=True).execute()
+        if response.status_code == 200:
+            bookings = response.data
+            if bookings:
+                for b in bookings:
+                    st.markdown(f"**Name:** {b['name']}")
+                    st.markdown(f"**Email:** {b['email']}")
+                    st.markdown(f"**Service:** {b['service']}")
+                    st.markdown(f"**Deadline:** {b['deadline']}")
+                    st.markdown(f"**Details:** {b['details']}")
+                    st.markdown(f"**Submitted At:** {b['created_at']}")
+                    st.markdown("---")
+            else:
+                st.info("No bookings found.")
         else:
-            if password:
-                st.error("Incorrect password.")
-
-
-
-
-
-
+            st.error("Failed to fetch bookings.")
+    else:
+        if password:
+            st.error("Incorrect password.")
