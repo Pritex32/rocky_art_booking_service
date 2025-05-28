@@ -4,6 +4,8 @@
 
 
 
+bcrypt==4.3.0
+
 matplotlib==3.9.2
 
 numpy==1.26.4
