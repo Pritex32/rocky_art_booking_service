@@ -378,7 +378,7 @@ elif choice == "Admin Dashboard":
                     st.markdown(f"**Deadline:** {b['deadline']}")
                     st.markdown(f"**Details:** {b['details']}")
                     st.markdown(f"**Status:** {b.get('status', 'Pending')}")
-                    st.markdown(f"**price:** {b.get['price']]")
+                    st.markdown(f"**price:** {b.get['price']")
                     st.markdown(f"**Submitted At:** {b['created_at']}")
                     st.markdown("---")
                     # Unique key per booking to avoid Streamlit warning
