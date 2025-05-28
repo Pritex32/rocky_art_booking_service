@@ -15,6 +15,10 @@ from streamlit_cookies_manager import EncryptedCookieManager
 from PIL import Image
 from postgrest.exceptions import APIError
 import requests
+from sendgrid import SendGridAPIClient
+from sendgrid.helpers.mail import Mail
+from twilio.rest import Client as TwilioClient
+
 
 from streamlit_cookies_manager import EncryptedCookieManager
 
@@ -71,6 +75,56 @@ if "current_user" not in st.session_state:
     st.session_state.current_user = ""
 if "menu_page" not in st.session_state:
     st.session_state.menu_page = "Book a Service"
+
+
+# to send automatic mail
+def send_notifications(booking):
+    name = booking['name']
+    email = booking['email']
+    phone = booking.get('phone')  # Make sure you have phone in your booking data
+
+    # Send Email
+    send_email(
+        to=email,
+        subject = f"🎉 {name}, your {booking['service']} service is complete — Action Required",
+
+        body = f"""
+Hi {name},
+
+We're happy to inform you that your booking for **{booking['service']}** has been successfully completed.
+
+If you have any outstanding payment, we kindly ask that you complete it as soon as possible to finalize the process.
+
+We appreciate your trust in our service and look forward to serving you again.
+
+If you have any questions or need assistance, feel free to reach out.
+
+Warm regards,  
+**Rocky Art**  
+Customer Service Team
+""" )
+
+    # Send WhatsApp message
+    if phone:
+        send_whatsapp_message(
+            to=phone,
+            message=f"Hi {name}, We're happy to inform you that your booking for **{booking['service']}** has been successfully completed.
+
+                             If you have any outstanding payment, we kindly ask that you complete it as soon as possible to finalize the process.
+
+                             We appreciate your trust in our service and look forward to serving you again.
+
+                             If you have any questions or need assistance, feel free to reach out."  )
+
+
+def send_email(to, subject, body):
+    # Integrate your email provider here (e.g. SendGrid or SMTP)
+    pass
+
+
+def send_whatsapp_message(to, message):
+    # Integrate your WhatsApp API here (e.g. Twilio)
+    pass
 
 
 def get_usd_to_ngn_rate():
@@ -323,8 +377,26 @@ elif choice == "Admin Dashboard":
                     st.markdown(f"**Service:** {b['service']}")
                     st.markdown(f"**Deadline:** {b['deadline']}")
                     st.markdown(f"**Details:** {b['details']}")
+                    st.markdown(f"**Status:** {b.get('status', 'Pending')}")
+                    st.markdown(f"**price:** {b.get['price']]")
                     st.markdown(f"**Submitted At:** {b['created_at']}")
                     st.markdown("---")
+                    # Unique key per booking to avoid Streamlit warning
+                    button_key = f"complete_{b['id']}"
+
+                    if b.get('status', 'Pending') != "Completed":
+                        if st.button("Mark as Completed", key=button_key):
+                            # Update status in Supabase
+                            update_response = supabase.table("bookings").update(
+                                {"status": "Completed"}
+                            ).eq("id", b['id']).execute()
+                            if update_response.error is None:
+                                st.success(f"Booking {b['name']} marked as completed.")
+                                send_notifications(b)
+                            else:
+                                # Call your email + WhatsApp sending function here
+                                 st.error(f"Failed to update status: {update_response.error.message}")
+                     st.markdown("---")
             else:
                 st.info("No bookings found.")
         else:
