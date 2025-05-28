@@ -108,13 +108,13 @@ Customer Service Team
     if phone:
         send_whatsapp_message(
             to=phone,
-            message=f"Hi {name}, We're happy to inform you that your booking for **{booking['service']}** has been successfully completed.
+            message=f"""Hi {name}, We're happy to inform you that your booking for **{booking['service']}** has been successfully completed.
 
                              If you have any outstanding payment, we kindly ask that you complete it as soon as possible to finalize the process.
 
                              We appreciate your trust in our service and look forward to serving you again.
 
-                             If you have any questions or need assistance, feel free to reach out."  )
+                             If you have any questions or need assistance, feel free to reach out."""  )
 
 
 def send_email(to, subject, body):
