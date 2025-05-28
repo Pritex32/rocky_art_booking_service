@@ -116,6 +116,7 @@ def submit_booking(name, email, service, deadline, details, price, currency):
         'phone_number': str(phone_number),
         "deadline": str(deadline),
         "details": details,
+        'reference_url':reference_url,
         "file_url": "",
         "price":float( price),
         "currency": currency  # New column, add to your supabase table!
@@ -192,6 +193,7 @@ if choice == "Book a Service":
                     'phone_number':str(phone_number),
                     "deadline":str(deadline),
                     "details": details,
+                    'reference_url':reference_url,
                     "file_url":file_url,
                     "price": float(price),
                     "currency": currency
