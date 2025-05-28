@@ -188,8 +188,7 @@ elif choice == "Admin Dashboard":
                     st.markdown("---")
             else:
                 st.info("No bookings found.")
-        else:
-            st.error("Failed to fetch bookings.")
+        
     else:
         if password:
             st.error("Incorrect password.")
