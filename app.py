@@ -175,12 +175,13 @@ if choice == "Book a Service":
                 st.error("Please fill in all required fields.")
             else:
                 file_url = ""
+                uploaded_url_obj = None
+
                 if reference_file is not None:
                     uploaded_url_obj = upload_file_to_supabase(reference_file)
                 if uploaded_url_obj is not None:
-                    file_url = uploaded_url_obj.get("publicUrl", "")  # public URL string
-                if reference_url:
-                    file_url = reference_url
+                    file_url = uploaded_url_obj.get("publicUrl", "")
+
             
             
                 data = {
