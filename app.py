@@ -392,11 +392,11 @@ elif choice == "Admin Dashboard":
                                 {"status": "Completed"}
                             ).eq("id", b['id']).execute()
                             if update_response.error is None:
-                                st.success(f"Booking {b['name']} marked as completed.")
-                                send_notifications(b)
+                                st.success(f"Booking marked as completed.")
+                                send_notifications(booking)  # your custom notification function
                             else:
-                                # Call your email + WhatsApp sending function here
-                                 st.error(f"Failed to update status: {update_response.error.message}")
+                                st.error(f"Failed to update booking: {update_response.error.message}")
+
                      
             else:
                 st.info("No bookings found.")
