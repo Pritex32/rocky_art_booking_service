@@ -2,7 +2,6 @@ import streamlit as st
 st.set_page_config(
     page_title='Rocky_art_bookings',
     page_icon='👋 ',
-
 )
 
 
@@ -105,8 +104,14 @@ def submit_booking(name, email, service, deadline, details, price, currency):
     else:
         st.error(f"Failed to submit booking: {response.error.message}")
         return False
-
-st.title("🎨 Rocky Art Company Booking System")
+col1,col2=st.colums(2)
+with col1:
+    st.title("🎨 Rocky Art Company Booking System")
+with col2:
+    image='logo__rockyart.png'
+    img=Image.open(image)
+    resize_img=img.resize((100,100))
+    st.write(resize_img)
 
 menu = ["Book a Service", "Admin Dashboard"]
 choice = st.selectbox("Menu", menu)
