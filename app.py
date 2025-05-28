@@ -64,6 +64,13 @@ def upload_file_to_supabase(file, bucket_name="bookingsbucket"):
         st.error(f"Exception during file upload: {e}")
         return None
 
+# for rediction to admin dashbooard
+if "logged_in" not in st.session_state:
+    st.session_state.logged_in = False
+if "current_user" not in st.session_state:
+    st.session_state.current_user = ""
+if "menu_page" not in st.session_state:
+    st.session_state.menu_page = "Book a Service"
 
 
 def get_usd_to_ngn_rate():
@@ -176,8 +183,14 @@ with col2:
     st.write(resize_img)
 
 menu = ["Book a Service","Admin Login/Register", "Admin Dashboard"]
-choice = st.selectbox("Menu",menu, index=0)
-st.write(menu)
+# Show dropdown only if not logged in or if not on admin dashboard
+if not st.session_state.logged_in:
+    choice = st.selectbox("Menu", menu, index=0)
+    st.session_state.menu_page = choice
+else:
+    st.session_state.menu_page = "Admin Dashboard"
+)
+choice = st.session_state.menu_page
 
 if choice == "Book a Service":
     st.header("Submit a Booking")
@@ -256,17 +269,34 @@ if choice == "Admin Login/Register":
         login_password = st.text_input("Password", type="password")
         login_submitted = st.form_submit_button("Login")
         if login_submitted:
-            login(login_username, login_password)
-    
+            # Call login logic
+            response = supabase.table("admins").select("*").eq("username", login_username).eq("password", login_password).execute()
+            if response.data:
+                st.session_state.logged_in = True
+                st.session_state.current_user = login_username
+                st.session_state.menu_page = "Admin Dashboard"
+                st.success("Login successful! Redirecting to Admin Dashboard...")
+                st.rerun()
+            else:
+                st.error("Invalid username or password.")
+
     st.markdown("---")
-    
+
     st.header("Admin Registration")
     with st.form("register_form"):
         reg_username = st.text_input("New Username")
         reg_password = st.text_input("New Password", type="password")
         reg_submit = st.form_submit_button("Register")
         if reg_submit:
-            register(reg_username, reg_password)
+            # Simple registration logic
+            response = supabase.table("admins").insert({
+                "username": reg_username,
+                "password": reg_password
+            }).execute()
+            if response.error is None:
+                st.success("Registration successful. You can now log in.")
+            else:
+                st.error("Registration failed. Username may already exist.")
 
 
 
