@@ -176,7 +176,8 @@ with col2:
     st.write(resize_img)
 
 menu = ["Book a Service","Admin Login/Register", "Admin Dashboard"]
-choice = st.selectbox("Menu", index=0)
+choice = st.selectbox("Menu",menu, index=0)
+st.write(menu)
 
 if choice == "Book a Service":
     st.header("Submit a Booking")
