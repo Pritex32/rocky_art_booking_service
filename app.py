@@ -14,7 +14,7 @@ import time
 from streamlit_cookies_manager import EncryptedCookieManager
 from PIL import Image
 
-import request
+import requests
 
 from streamlit_cookies_manager import EncryptedCookieManager
 
