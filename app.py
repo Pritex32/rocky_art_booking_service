@@ -200,11 +200,15 @@ if choice == "Book a Service":
                 }
                 st.write(data)
                 response = supabase.table("bookings").insert(data).execute()
-                if response.error is None:
+                # Safe error access:
+                error = getattr(response, "error", None)
+                if error is None:
                     st.success("Booking submitted!")
                 else:
-                    st.error(f"Error: {response.error.message}")
-                    st.write(response)
+                    # If error object has message attribute, else fallback:
+                    error_message = getattr(error, "message", str(error))
+                    st.error(f"Error: {error_message}")
+            st.write(response)
 
 
 elif choice == "Admin Dashboard":
