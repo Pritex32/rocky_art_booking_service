@@ -261,6 +261,8 @@ if choice == "Book a Service":
                     st.error(f"Error: {error_message}")
             
 
+from postgrest.exceptions import APIError
+
 if choice == "Admin Login/Register":
     st.header("Admin Login")
     with st.form("login_form"):
@@ -280,6 +282,7 @@ if choice == "Admin Login/Register":
                 st.error("Invalid username or password.")
 
     st.markdown("---")
+
     st.header("Admin Registration")
     with st.form("register_form"):
         reg_username = st.text_input("New Username")
@@ -289,18 +292,18 @@ if choice == "Admin Login/Register":
         if reg_submit:
             try:
                 response = supabase.table("admins").insert({
-                "username": reg_username,
-                "password_hash": reg_password  # In real apps, hash this!
-                 }).execute()
+                    "username": reg_username,
+                    "password_hash": reg_password  # In real apps, hash this!
+                }).execute()
 
                 if response.data:
                     st.success("Admin registered successfully!")
 
-              except APIError as e:
-                  if e.code == '23505':  # Unique constraint violation
-                  st.error("Username already exists. Please choose a different one.")
-              else:
-                  st.error(f"Registration failed: {e.message}")
+            except APIError as e:
+                if e.code == '23505':  # Unique constraint violation
+                    st.error("Username already exists. Please choose a different one.")
+                else:
+                    st.error(f"Registration failed: {e.message}")
 
 
 elif choice == "Admin Dashboard":
