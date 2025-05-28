@@ -107,7 +107,7 @@ def convert_price(price_usd, currency):
         return price_usd * USD_TO_NGN
     return price_usd
 
-def submit_booking(name, email, service, deadline, details, price, currency):
+def submit_booking(name, email, service, location,phone_number,deadline, details,reference_url,file_url, price, currency):
     data = {
         "name": name,
         "email": email,
@@ -198,6 +198,7 @@ if choice == "Book a Service":
                     "price": float(price),
                     "currency": currency
                 }
+                st.write(data)
                 response = supabase.table("bookings").insert(data).execute()
                 if response.error is None:
                     st.success("Booking submitted!")
