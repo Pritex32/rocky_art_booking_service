@@ -79,9 +79,9 @@ if "menu_page" not in st.session_state:
 
 # to send automatic mail
 def send_notifications(booking):
-    name = booking['name']
-    email = booking['email']
-    phone = booking.get('phone')  # Make sure you have phone in your booking data
+    name = bookings.get['name']
+    email = bookings.get['email']
+    phone = bookings.get('phone')  # Make sure you have phone in your booking data
 
     # Send Email
     send_email(
@@ -103,6 +103,7 @@ Warm regards,
 **Rocky Art**  
 Customer Service Team
 """ )
+send_email(to=email, subject=email_subject, body=email_body)
 
     # Send WhatsApp message
     if phone:
@@ -115,7 +116,7 @@ Customer Service Team
                              We appreciate your trust in our service and look forward to serving you again.
 
                              If you have any questions or need assistance, feel free to reach out."""  )
-
+ send_whatsapp_message(to=phone, message=whatsapp_message)
 
 def send_email(to, subject, body):
     # Integrate your email provider here (e.g. SendGrid or SMTP)
@@ -251,7 +252,7 @@ if choice == "Book a Service":
     with st.form("booking_form"):
         name = st.text_input("Full Name")
         email = st.text_input("Email")
-        phone_number = st.number_input('Phone_number', value=0)
+        phone_number = st.text_input('Phone_number', value=0)
         currency = st.selectbox("Select Currency", ["USD", "NGN"])
         location = st.text_input('Location', value='London')
 
