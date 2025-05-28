@@ -296,11 +296,11 @@ if choice == "Admin Login/Register":
                 if response.data:
                     st.success("Admin registered successfully!")
 
-             except APIError as e:
-                 if e.code == '23505':  # Unique constraint violation
-                 st.error("Username already exists. Please choose a different one.")
-             else:
-                 st.error(f"Registration failed: {e.message}")
+              except APIError as e:
+                  if e.code == '23505':  # Unique constraint violation
+                  st.error("Username already exists. Please choose a different one.")
+              else:
+                  st.error(f"Registration failed: {e.message}")
 
 
 elif choice == "Admin Dashboard":
