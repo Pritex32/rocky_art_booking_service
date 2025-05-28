@@ -13,7 +13,7 @@ import json
 import time
 from streamlit_cookies_manager import EncryptedCookieManager
 from PIL import Image
-
+from postgrest.exceptions import APIError
 import requests
 
 from streamlit_cookies_manager import EncryptedCookieManager
@@ -292,11 +292,18 @@ if choice == "Admin Login/Register":
                 "username": reg_username,
                 "password_hash": reg_password
             }).execute()
-            if response.error is None:
-                st.success("Registration successful. You can now log in.")
-            else:
-                st.error("Registration failed. Username may already exist.")
+            try:
+                response = supabase.table("admins").insert({
+                "username": reg_username,
+               "password": reg_password}).execute()
 
+                if response.data:
+                    st.success("Admin registered successfully!")
+                else:
+                    st.warning("No data returned from Supabase.")
+
+            except APIError as e:
+                st.error(f"Registration failed: {e.message}")
 
 
 elif choice == "Admin Dashboard":
