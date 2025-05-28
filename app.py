@@ -204,6 +204,8 @@ if choice == "Book a Service":
                     st.success("Booking submitted!")
                 else:
                     st.error(f"Error: {response.error.message}")
+                    st.write(response)
+
 
 elif choice == "Admin Dashboard":
     st.header("Admin Dashboard")
