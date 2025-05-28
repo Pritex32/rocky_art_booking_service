@@ -269,7 +269,7 @@ if choice == "Admin Login/Register":
         login_submitted = st.form_submit_button("Login")
         if login_submitted:
             # Call login logic
-            response = supabase.table("admins").select("*").eq("username", login_username).eq("password", login_password).execute()
+            response = supabase.table("admins").select("*").eq("username", login_username).eq("password_hash", login_password).execute()
             if response.data:
                 st.session_state.logged_in = True
                 st.session_state.current_user = login_username
@@ -290,7 +290,7 @@ if choice == "Admin Login/Register":
             # Simple registration logic
             response = supabase.table("admins").insert({
                 "username": reg_username,
-                "password": reg_password
+                "password_hash": reg_password
             }).execute()
             if response.error is None:
                 st.success("Registration successful. You can now log in.")
