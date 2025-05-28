@@ -115,9 +115,9 @@ def submit_booking(name, email, service, location,phone_number,deadline, details
         'location': location,
         'phone_number': str(phone_number),
         "deadline": str(deadline),
-        "details": details,
-        'reference_url':reference_url,
-        "file_url": file_url,
+        "details": details if details else None,
+        'reference_url':reference_url if reference_url else None,
+        "file_url": file_url if file_url else None,
         "price": price,
         "currency": currency  # New column, add to your supabase table!
     }
@@ -192,9 +192,9 @@ if choice == "Book a Service":
                     'location': location,
                     'phone_number':str(phone_number),
                     "deadline":str(deadline),
-                    "details": details,
-                    'reference_url':reference_url,
-                    "file_url":file_url,
+                    "details": details if details else None,
+                    'reference_url':reference_url if reference_url else None,
+                    "file_url":file_url if file_url else None,
                     "price": price,
                     "currency": currency
                 }
