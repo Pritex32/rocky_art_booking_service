@@ -391,11 +391,11 @@ elif choice == "Admin Dashboard":
                             update_response = supabase.table("bookings").update(
                                 {"status": "Completed"}
                             ).eq("id", b['id']).execute()
-                            if update_response.error is None:
-                                st.success(f"Booking marked as completed.")
-                                send_notifications(booking)  # your custom notification function
+                            if 'error' not in update_response or update_response['error'] is None:
+                                st.success("Booking marked as completed.")
                             else:
-                                st.error(f"Failed to update booking: {update_response.error.message}")
+                                st.error(f"Update failed: {update_response['error']['message']}")
+
 
                      
             else:
