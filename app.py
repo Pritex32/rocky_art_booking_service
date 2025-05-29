@@ -110,11 +110,7 @@ def send_email(to, subject, body):
     except Exception as e:
         print(f"❌ Failed to send email to {to}. Error: {e}")
 
- # define email and whatsap
-def send_email(to, subject, body):
-    # Your email integration logic
-    print(f"Sending email to {to} with subject '{subject}'")
-    pass
+
 
 # get booking table
 def get_booking_by_id(booking_id):
