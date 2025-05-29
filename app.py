@@ -18,6 +18,10 @@ import requests
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
 from twilio.rest import Client as TwilioClient
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
+
 
 
 from streamlit_cookies_manager import EncryptedCookieManager
@@ -75,6 +79,30 @@ if "current_user" not in st.session_state:
     st.session_state.current_user = ""
 if "menu_page" not in st.session_state:
     st.session_state.menu_page = "Book a Service"
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
+
+def send_email(to, subject, body):
+    sender_email = "oluomachiu@gmail.com"          # <- Your Gmail
+    sender_password = "priscaukanwa"     # <- App password from Gmail
+
+    msg = MIMEMultipart()
+    msg['From'] = sender_email
+    msg['To'] = to
+    msg['Subject'] = subject
+
+    msg.attach(MIMEText(body, 'plain'))
+
+    try:
+        server = smtplib.SMTP('smtp.gmail.com', 587)
+        server.starttls()
+        server.login(sender_email, sender_password)
+        server.sendmail(sender_email, to, msg.as_string())
+        server.quit()
+        print(f"✅ Email sent to {to}")
+    except Exception as e:
+        print(f"❌ Failed to send email to {to}. Error: {e}")
 
  # define email and whatsap
 def send_email(to, subject, body):
