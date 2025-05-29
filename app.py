@@ -4,7 +4,7 @@ st.set_page_config(
     page_icon='👋 ',
 )
 
-
+# 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
 import bcrypt
 import pandas as pd
 from streamlit_option_menu import option_menu
@@ -75,22 +75,33 @@ if "current_user" not in st.session_state:
     st.session_state.current_user = ""
 if "menu_page" not in st.session_state:
     st.session_state.menu_page = "Book a Service"
+# get booking table
+def get_booking_by_id(booking_id):
+    response = supabase.table("bookings").select("*").eq("id", booking_id).execute()
+    if response.data:
+        return response.data[0]
+    else:
+        print("Booking not found.")
+        return None
 
+# To send automatic mail and WhatsApp messages
+def send_notifications(booking_id):
+    booking = get_booking_by_id(booking_id)
+    if not booking:
+        return
 
-# to send automatic mail
-def send_notifications(booking):
-    name = bookings.get['name']
-    email = bookings.get['email']
-    phone = bookings.get('phone')  # Make sure you have phone in your booking data
+    name = booking.get('name')
+    email = booking.get('email')
+    phone = booking.get('phone')
+    service = booking.get('service')
 
     # Send Email
     send_email(
         to=email,
-        subject = f"🎉 {name}, your {booking['service']} service is complete — Action Required",
+        subject=f"🎉 {name}, your {service} service is complete — Action Required",
+        body=f"""Hi {name},
 
-        body = f""" Hi {name},
-
-We're happy to inform you that your booking for **{booking['service']}** has been successfully completed.
+We're happy to inform you that your booking for **{service}** has been successfully completed.
 
 If you have any outstanding payment, we kindly ask that you complete it as soon as possible to finalize the process.
 
@@ -101,31 +112,22 @@ If you have any questions or need assistance, feel free to reach out.
 Warm regards,  
 **Rocky Art**  
 Customer Service Team
-""" )
+"""
+    )
 
-
-    # Send WhatsApp message
-      if phone:
-          send_whatsapp_message(
+    # Send WhatsApp Message
+    if phone:
+        send_whatsapp_message(
             to=phone,
-            message=f"""Hi {name}, We're happy to inform you that your booking for **{booking['service']}** has been successfully completed.
+            message=f"""Hi {name}, We're happy to inform you that your booking for **{service}** has been successfully completed.
 
-                             If you have any outstanding payment, we kindly ask that you complete it as soon as possible to finalize the process.
+If you have any outstanding payment, we kindly ask that you complete it as soon as possible to finalize the process.
 
-                             We appreciate your trust in our service and look forward to serving you again.
+We appreciate your trust in our service and look forward to serving you again.
 
-                             If you have any questions or need assistance, feel free to reach out."""  )
-send_whatsapp_message(to=phone, message=whatsapp_message)
-send_email(to=email, subject=email_subject, body=email_body)
+If you have any questions or need assistance, feel free to reach out."""
+        )
 
-def send_email(to, subject, body):
-    # Integrate your email provider here (e.g. SendGrid or SMTP)
-    pass
-
-
-def send_whatsapp_message(to, message):
-    # Integrate your WhatsApp API here (e.g. Twilio)
-    pass
 
 
 def get_usd_to_ngn_rate():
@@ -393,7 +395,10 @@ elif choice == "Admin Dashboard":
                                 {"status": "Completed"}
                             ).eq("id", b['id']).execute()
                             if 'error' not in update_response or update_response['error'] is None:
+                                send_notifications(b)
                                 st.success("Booking marked as completed.")
+                                time.sleep(2)
+                                st.rerun()
                             else:
                                 st.error(f"Update failed: {update_response['error']['message']}")
 
