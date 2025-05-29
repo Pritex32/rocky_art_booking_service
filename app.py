@@ -395,7 +395,7 @@ elif choice == "Admin Dashboard":
                                 {"status": "Completed"}
                             ).eq("id", b['id']).execute()
                             if 'error' not in update_response or update_response['error'] is None:
-                                send_notifications(b)
+                                send_notifications(b['id'])
                                 st.success("Booking marked as completed.")
                                 time.sleep(2)
                                 st.rerun()
