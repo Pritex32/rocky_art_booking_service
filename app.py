@@ -105,10 +105,8 @@ def send_notifications(bookings):
         return  # Don’t send anything if critical info is missing
 
     # Send Email
-    send_email(
-        to=email,
-        subject=f"🎉 {name}, your {service} service is complete — Action Required",
-        body=f"""Hi {name},
+    email_subject = f"🎉 {name}, your {service} service is complete — Action Required"
+    email_body = f"""Hi {name},
 
 We're happy to inform you that your booking for **{service}** has been successfully completed.
 
@@ -125,10 +123,7 @@ Customer Service Team
     )
 
     # Send WhatsApp
-    if phone:
-        send_whatsapp_message(
-            to=phone,
-            message=f"""Hi {name}, We're happy to inform you that your booking for **{service}** has been successfully completed.
+     whatsapp_message = f"""Hi {name}, We're happy to inform you that your booking for **{service}** has been successfully completed..
 
 If you have any outstanding payment, we kindly ask that you complete it as soon as possible to finalize the process.
 
