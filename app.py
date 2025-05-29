@@ -152,6 +152,11 @@ Customer Service Team
    
     # Send notifications
     send_email(to=email, subject=email_subject, body=email_body)
+    if email_sent:
+        print("Email sent successfully!")
+    else:
+        print("Email failed to send.")
+    return email_sent
 
    
 def get_usd_to_ngn_rate():
@@ -420,6 +425,10 @@ elif choice == "Admin Dashboard":
                             if 'error' not in update_response or update_response['error'] is None:
                                 send_notifications(b)
                                 st.success("Booking marked as completed.")
+                                if email_sent:
+                                    st.success("Booking marked as completed and email sent successfully.")
+                                  else:
+                                      st.error("Booking marked as completed but email failed to send.")
                                 time.sleep(2)
                                 st.rerun()
                             else:
