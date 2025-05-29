@@ -89,8 +89,8 @@ load_dotenv()
 
 
 def send_email(to, subject, body):
-    sender_email =  st.secrets["email"]["sender"]         # <- Your Gmail
-    sender_password = st.secrets["email"]["password"]
+    sender_email = 'oluomachiu@gmail.com'         # <- Your Gmail
+    sender_password = 'priscaukanwa'
     # <- App password from Gmail
 
     msg = MIMEMultipart()
