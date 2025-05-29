@@ -400,16 +400,15 @@ elif choice == "Admin Dashboard":
                     if b.get('status', 'Pending') != "Completed":
                         if st.button("Mark as Completed", key=button_key):
                             # Update status in Supabase
-                            update_response = supabase.table("bookings").update(
-                                {"status": "Completed"}
-                            ).eq("id", b['id']).execute()
-                            if 'error' not in update_response or update_response['error'] is None:
+                            update_response = supabase.table("bookings").update( {"status": "Completed"}).eq("id", b['id']).execute()
+
+                            if update_response.error is None:
                                 send_notifications(b)
                                 st.success("Booking marked as completed.")
                                 time.sleep(2)
                                 st.rerun()
                             else:
-                                st.error(f"Update failed: {update_response['error']['message']}")
+                                st.error(f"Update failed: {update_response.error.message}")
 
 
                      
