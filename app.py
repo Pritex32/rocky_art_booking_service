@@ -100,6 +100,7 @@ def send_notifications(bookings):
     email = bookings.get('email')
     phone = bookings.get('phone_number')
     service = bookings.get('service')
+    
     if not email or not name or not service:
         print("Missing required booking info.")
         return  # Don’t send anything if critical info is missing
@@ -122,21 +123,19 @@ Customer Service Team
 """
 
     # Send WhatsApp
-     whatsapp_message = f"""Hi {name}, We're happy to inform you that your booking for **{service}** has been successfully completed..
+    whatsapp_message = f"""Hi {name}, We're happy to inform you that your booking for **{service}** has been successfully completed..
 
 If you have any outstanding payment, we kindly ask that you complete it as soon as possible to finalize the process.
 
 We appreciate your trust in our service and look forward to serving you again.
 
 If you have any questions or need assistance, feel free to reach out."""
-        
+
     # Send notifications
     send_email(to=email, subject=email_subject, body=email_body)
 
     if phone:
         send_whatsapp_message(to=phone, message=whatsapp_message)
-
-
 
 def get_usd_to_ngn_rate():
     API_KEY = "d25a9a667870cb6fe7c611ba"  # Put your actual API key here or store as env var
