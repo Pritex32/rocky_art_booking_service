@@ -67,7 +67,7 @@ def upload_file_to_supabase(file, bucket_name="bookingsbucket"):
     except Exception as e:
         st.error(f"Exception during file upload: {e}")
         return None
-
+   
 # for rediction to admin dashbooard
 if "logged_in" not in st.session_state:
     st.session_state.logged_in = False
@@ -75,6 +75,16 @@ if "current_user" not in st.session_state:
     st.session_state.current_user = ""
 if "menu_page" not in st.session_state:
     st.session_state.menu_page = "Book a Service"
+
+ # define email and whatsap
+def send_email(to, subject, body):
+    # Your email integration logic
+    pass
+
+def send_whatsapp_message(to, message):
+    # Your WhatsApp API logic
+    pass
+
 # get booking table
 def get_booking_by_id(booking_id):
     response = supabase.table("bookings").select("*").eq("id", booking_id).execute()
@@ -131,6 +141,7 @@ If you have any questions or need assistance, feel free to reach out."""
 
     if phone:
         send_whatsapp_message(to=phone, message=whatsapp_message)
+
 
 
 def get_usd_to_ngn_rate():
