@@ -88,8 +88,7 @@ def send_notifications(booking):
         to=email,
         subject = f"🎉 {name}, your {booking['service']} service is complete — Action Required",
 
-        body = f"""
-Hi {name},
+        body = f""" Hi {name},
 
 We're happy to inform you that your booking for **{booking['service']}** has been successfully completed.
 
@@ -103,11 +102,11 @@ Warm regards,
 **Rocky Art**  
 Customer Service Team
 """ )
-send_email(to=email, subject=email_subject, body=email_body)
+
 
     # Send WhatsApp message
-    if phone:
-        send_whatsapp_message(
+      if phone:
+          send_whatsapp_message(
             to=phone,
             message=f"""Hi {name}, We're happy to inform you that your booking for **{booking['service']}** has been successfully completed.
 
@@ -116,7 +115,8 @@ send_email(to=email, subject=email_subject, body=email_body)
                              We appreciate your trust in our service and look forward to serving you again.
 
                              If you have any questions or need assistance, feel free to reach out."""  )
- send_whatsapp_message(to=phone, message=whatsapp_message)
+send_whatsapp_message(to=phone, message=whatsapp_message)
+send_email(to=email, subject=email_subject, body=email_body)
 
 def send_email(to, subject, body):
     # Integrate your email provider here (e.g. SendGrid or SMTP)
