@@ -120,7 +120,6 @@ Warm regards,
 **Rocky Art**  
 Customer Service Team
 """
-    )
 
     # Send WhatsApp
      whatsapp_message = f"""Hi {name}, We're happy to inform you that your booking for **{service}** has been successfully completed..
@@ -130,7 +129,7 @@ If you have any outstanding payment, we kindly ask that you complete it as soon 
 We appreciate your trust in our service and look forward to serving you again.
 
 If you have any questions or need assistance, feel free to reach out."""
-        )
+        
     # Send notifications
     send_email(to=email, subject=email_subject, body=email_body)
 
