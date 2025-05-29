@@ -85,15 +85,11 @@ def get_booking_by_id(booking_id):
         return None
 
 # To send automatic mail and WhatsApp messages
-def send_notifications(booking_id):
-    booking = get_booking_by_id(booking_id)
-    if not booking:
-        return
-
-    name = booking.get('name')
-    email = booking.get('email')
-    phone = booking.get('phone')
-    service = booking.get('service')
+def send_notifications(bookings):
+    name = bookings.get('name')
+    email = bookings.get('email')
+    phone = bookings.get('phone_number')
+    service = bookings.get('service')
 
     # Send Email
     send_email(
@@ -115,7 +111,7 @@ Customer Service Team
 """
     )
 
-    # Send WhatsApp Message
+    # Send WhatsApp
     if phone:
         send_whatsapp_message(
             to=phone,
@@ -127,7 +123,6 @@ We appreciate your trust in our service and look forward to serving you again.
 
 If you have any questions or need assistance, feel free to reach out."""
         )
-
 
 
 def get_usd_to_ngn_rate():
@@ -395,7 +390,7 @@ elif choice == "Admin Dashboard":
                                 {"status": "Completed"}
                             ).eq("id", b['id']).execute()
                             if 'error' not in update_response or update_response['error'] is None:
-                                send_notifications(b['id'])
+                                send_notifications(bookings)
                                 st.success("Booking marked as completed.")
                                 time.sleep(2)
                                 st.rerun()
