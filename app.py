@@ -79,13 +79,19 @@ if "current_user" not in st.session_state:
     st.session_state.current_user = ""
 if "menu_page" not in st.session_state:
     st.session_state.menu_page = "Book a Service"
-import smtplib
-from email.mime.text import MIMEText
-from email.mime.multipart import MIMEMultipart
+
+from twilio.rest import Client
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
+
 
 def send_email(to, subject, body):
-    sender_email = "oluomachiu@gmail.com"          # <- Your Gmail
-    sender_password = "priscaukanwa"     # <- App password from Gmail
+    sender_email =  st.secrets["email"]["sender"]         # <- Your Gmail
+    sender_password = st.secrets["email"]["password"]
+    # <- App password from Gmail
 
     msg = MIMEMultipart()
     msg['From'] = sender_email
@@ -110,11 +116,6 @@ def send_email(to, subject, body):
     print(f"Sending email to {to} with subject '{subject}'")
     pass
 
-def send_whatsapp_message(to, message):
-    print(f"Sending WhatsApp to {to} with message: {message}")
-    # Your WhatsApp API logic
-    pass
-
 # get booking table
 def get_booking_by_id(booking_id):
     response = supabase.table("bookings").select("*").eq("id", booking_id).execute()
@@ -128,7 +129,7 @@ def get_booking_by_id(booking_id):
 def send_notifications(bookings):
     name = bookings.get('name')
     email = bookings.get('email')
-    phone = bookings.get('phone_number')
+   
     service = bookings.get('service')
     
     if not email or not name or not service:
@@ -152,21 +153,11 @@ Warm regards,
 Customer Service Team
 """
 
-    # Send WhatsApp
-    whatsapp_message = f"""Hi {name}, We're happy to inform you that your booking for **{service}** has been successfully completed..
-
-If you have any outstanding payment, we kindly ask that you complete it as soon as possible to finalize the process.
-
-We appreciate your trust in our service and look forward to serving you again.
-
-If you have any questions or need assistance, feel free to reach out."""
-
+   
     # Send notifications
     send_email(to=email, subject=email_subject, body=email_body)
 
-    if phone:
-        send_whatsapp_message(to=phone, message=whatsapp_message)
-
+   
 def get_usd_to_ngn_rate():
     API_KEY = "d25a9a667870cb6fe7c611ba"  # Put your actual API key here or store as env var
     url=f" https://v6.exchangerate-api.com/v6/d25a9a667870cb6fe7c611ba/latest/USD"
