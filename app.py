@@ -79,9 +79,11 @@ if "menu_page" not in st.session_state:
  # define email and whatsap
 def send_email(to, subject, body):
     # Your email integration logic
+    print(f"Sending email to {to} with subject '{subject}'")
     pass
 
 def send_whatsapp_message(to, message):
+    print(f"Sending WhatsApp to {to} with message: {message}")
     # Your WhatsApp API logic
     pass
 
