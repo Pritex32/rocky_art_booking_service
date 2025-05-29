@@ -4,6 +4,9 @@
 sendgrid==6.10.0         # Optional: only if using SendGrid
 twilio==9.0.3            # Optional: only if using Twilio for WhatsApp
 
+twilio==9.0.1
+python-dotenv==1.0.1  # Optional, for managing API keys securely
+
 
 streamlit-cookies-manager==0.2.0
 
