@@ -434,8 +434,8 @@ if choice == "Book a Service":
                      amount_to_pay_in_naira = convert_price(amount_to_pay, "NGN")
                  else:
                      amount_to_pay_in_naira = amount_to_pay
-                init_response = initialize_payment(email, amount_to_pay)
-                if init_response["status"]:
+                 init_response = initialize_payment(email, amount_to_pay)
+                 if init_response["status"]:
                     payment_link = init_response["data"]["authorization_url"]
                     reference = init_response["data"]["reference"]
                     file_url = ""
