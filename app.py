@@ -21,6 +21,8 @@ from twilio.rest import Client as TwilioClient
 import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
+from fpdf import FPDF
+import io
 
 
 
@@ -71,6 +73,27 @@ def upload_file_to_supabase(file, bucket_name="bookingsbucket"):
     except Exception as e:
         st.error(f"Exception during file upload: {e}")
         return None
+
+# to generate invoice
+def generate_receipt_pdf(data):
+    pdf = FPDF()
+    pdf.add_page()
+    pdf.set_font("Arial", size=12)
+
+    pdf.cell(200, 10, txt="Rocky Art Booking Receipt", ln=True, align="C")
+    pdf.ln(10)
+
+    for key, value in data.items():
+        pdf.cell(200, 10, txt=f"{key.capitalize().replace('_', ' ')}: {value}", ln=True)
+
+    pdf.cell(200, 10, txt=f"Date Issued: {datetime.date.today()}", ln=True)
+
+    # Save to a BytesIO object
+    pdf_output = io.BytesIO()
+    pdf.output(pdf_output)
+    pdf_output.seek(0)
+    return pdf_output
+
    
 # for rediction to admin dashbooard
 if "logged_in" not in st.session_state:
@@ -273,6 +296,10 @@ with col2:
 
 menu = ["Book a Service","Admin Login/Register", "Admin Dashboard"]
 # Show dropdown only if not logged in or if not on admin dashboard
+
+if st.button('View My Work'):
+    st.write('Check it out on [Instagram](https://www.instagram.com/your_username)')
+
 if not st.session_state.logged_in:
     choice = st.selectbox("Menu", menu, index=0)
     st.session_state.menu_page = choice
@@ -348,7 +375,23 @@ if choice == "Book a Service":
                     # If error object has message attribute, else fallback:
                     error_message = getattr(error, "message", str(error))
                     st.error(f"Error: {error_message}")
-            
+                    receipt_pdf = generate_receipt_pdf(data)
+                    st.download_button(label="📄 Download Receipt",
+                     data=receipt_pdf,
+                    file_name=f"rocky_art_receipt_{name.replace(' ', '_')}.pdf", mime="application/pdf" )
+        col1,col2=st.columns(2)
+        with col1:
+            st.write('me')
+        with col2:
+            if st.button('View My Work'):
+                st.write('View my Works [Instagram](https://www.instagram.com/rocky__art?igsh=MXJkaTZxa2o2YXcwaA==)')
+
+
+
+
+
+
+
 
 from postgrest.exceptions import APIError
 
