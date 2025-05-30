@@ -142,7 +142,7 @@ def generate_receipt_pdf(data):
      # Optional: Add a footer line or thank you note
     pdf.ln(10)
     pdf.set_font("Arial", 'I', 10)
-    pdf.cell(0, 10, "Thank you for your booking!", ln=True, align='C
+    pdf.cell(0, 10, "Thank you for your booking!", ln=True, align='C')
 
     
    
