@@ -582,7 +582,7 @@ elif choice == "Admin Dashboard":
                     st.markdown(f"**Payment_Status:** {b.get('payment_status', 'Unknown')}")
 
                     st.markdown(f"**Price:** {b.get('price', 'N/A')}")
-                    if booking.get("file_url"):
+                    if bookings.get("file_url"):
                         st.markdown(f"[📎 View Uploaded File]({booking['file_url']})", unsafe_allow_html=True)
                     else:
                         st.write("No file uploaded.")
