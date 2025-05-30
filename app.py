@@ -409,15 +409,16 @@ if choice == "Book a Service":
                 
 col1, col2 = st.columns(2)
 with col1:
-    if st.session_state.booking_data is not None:
-        if st.button("Generate Receipt"):
-            receipt_pdf = generate_receipt_pdf(st.session_state.booking_data)
-            st.download_button(
-                label="📄 Download Receipt",
-                data=receipt_pdf,
-                file_name=f"rocky_art_receipt_{st.session_state.booking_data['name'].replace(' ', '_')}.pdf",
-                mime="application/pdf"
-            )
+    if "booking_data" in st.session_state:
+        receipt_pdf = generate_receipt_pdf(st.session_state.booking_data)
+        st.download_button(
+        label="Download Receipt",
+        data=receipt_pdf,
+        file_name=f"rocky_art_receipt_{st.session_state.booking_data['name'].replace(' ', '_')}.pdf",
+        mime="application/pdf"
+    )
+    else:
+        st.warning("No booking data found. Please submit the form first.")
     st.write('me')
     
     
