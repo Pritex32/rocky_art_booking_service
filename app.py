@@ -131,7 +131,7 @@ def generate_receipt_pdf(data):
     symbol = "$" if data['currency'] == 'USD' else "₦"
     price_str = f"{symbol}{data['price']:,.2f}"
     write_label_value("Price", price_str)
-     pdf.ln(5)
+    pdf.ln(5)
 
     # Details section (multi cell for longer text)
     if data.get("details"):
@@ -144,18 +144,8 @@ def generate_receipt_pdf(data):
     pdf.set_font("Arial", 'I', 10)
     pdf.cell(0, 10, "Thank you for your booking!", ln=True, align='C
 
-    pdf.cell(200, 10, txt=f"Name: {data['name']}", ln=True)
-    pdf.cell(200, 10, txt=f"Email: {data['email']}", ln=True)
-    pdf.cell(200, 10, txt=f"Phone: {data['phone_number']}", ln=True)
-    pdf.cell(200, 10, txt=f"Service: {data['service']}", ln=True)
-    pdf.cell(200, 10, txt=f"Location: {data['location']}", ln=True)
-    pdf.cell(200, 10, txt=f"Deadline: {data['deadline']}", ln=True)
-    pdf.cell(200, 10, txt=f"Currency: {data['currency']}", ln=True)
-    pdf.cell(200, 10, txt=f"Price: {data['price']}", ln=True)
-
-    if data.get("details"):
-        pdf.multi_cell(0, 10, txt=f"Details:\n{data['details']}")
-
+    
+   
     buffer = BytesIO()
     pdf.output(buffer)
     buffer.seek(0)
