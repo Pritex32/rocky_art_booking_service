@@ -430,12 +430,13 @@ if choice == "Book a Service":
             if not name or not email:
                 st.error("Please fill in all required fields.")
             else:
-                 if currency == "USD":
-                     amount_to_pay_in_naira = convert_price(amount_to_pay, "NGN")
-                 else:
-                     amount_to_pay_in_naira = amount_to_pay
-                 init_response = initialize_payment(email, amount_to_pay)
-                 if init_response["status"]:
+                if currency == "USD":
+                    amount_to_pay_in_naira = convert_price(amount_to_pay, "NGN")
+                else:
+                    amount_to_pay_in_naira = amount_to_pay
+
+                init_response = initialize_payment(email, amount_to_pay_in_naira)
+                if init_response["status"]:
                     payment_link = init_response["data"]["authorization_url"]
                     reference = init_response["data"]["reference"]
                     file_url = ""
@@ -466,9 +467,8 @@ if choice == "Book a Service":
 
                     response = supabase.table("bookings").insert(data).execute()
                     st.success("Redirecting to payment...")
-
-                 else:
-                     st.error("Payment initialization failed. Try again.")
+                else:
+                    st.error("Payment initialization failed. Try again.")
 
                 # Safe error access:
                 error = getattr(response, "error", None)
@@ -480,7 +480,6 @@ if choice == "Book a Service":
                 else:
                     st.session_state.booking_submitted = False
                     error_message = getattr(error, "message", str(error))
-                   
     
                    
                 
