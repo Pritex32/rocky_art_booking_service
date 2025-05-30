@@ -84,7 +84,7 @@ def generate_receipt_pdf(data):
     pdf.add_page()
     pdf.set_font("Arial", size=12)
 
-    pdf.cell(200, 10, txt="📄 Booking Receipt", ln=True, align='C')
+    pdf.cell(200, 10, txt=" Booking Receipt", ln=True, align='C')
     pdf.cell(200, 10, txt=f"Date Issued: {date.today()}", ln=True)
 
     pdf.cell(200, 10, txt=f"Name: {data['name']}", ln=True)
@@ -390,7 +390,7 @@ if choice == "Book a Service":
                         receipt_pdf = generate_receipt_pdf(data)
     
                         st.download_button(
-                         label="📄 Download Receipt",
+                         label="Download Receipt",
                          data=receipt_pdf,
                          file_name=f"rocky_art_receipt_{data['name'].replace(' ', '_')}.pdf",
                          mime="application/pdf" )
