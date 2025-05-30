@@ -6,6 +6,8 @@ st.set_page_config(
 
 # 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
 import bcrypt
+import uuid
+
 import pandas as pd
 from streamlit_option_menu import option_menu
 from io import BytesIO
