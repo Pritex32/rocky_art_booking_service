@@ -50,6 +50,13 @@ def get_supabase_client():
 # Initialize Supabase client
 supabase = get_supabase_client() # use this to call the supabase database
 
+# to generate receipt out the booking form
+ Add this at the top of your app to persist session state
+if "booking_data" not in st.session_state:
+    st.session_state.booking_data = None
+if "show_receipt_button" not in st.session_state:
+    st.session_state.show_receipt_button = False
+
 def upload_file_to_supabase(file, bucket_name="bookingsbucket"):
     try:
         # Read file bytes
@@ -297,8 +304,6 @@ with col2:
 menu = ["Book a Service","Admin Login/Register", "Admin Dashboard"]
 # Show dropdown only if not logged in or if not on admin dashboard
 
-if st.button('View My Work'):
-    st.write('Check it out on [Instagram](https://www.instagram.com/your_username)')
 
 if not st.session_state.logged_in:
     choice = st.selectbox("Menu", menu, index=0)
@@ -371,18 +376,26 @@ if choice == "Book a Service":
                 error = getattr(response, "error", None)
                 if error is None:
                     st.success("Booking submitted!")
+                    st.session_state.booking_data = data
+                    st.session_state.show_receipt_button = True
                 else:
                     # If error object has message attribute, else fallback:
                     error_message = getattr(error, "message", str(error))
-                    st.error(f"Error: {error_message}")
-                    receipt_pdf = generate_receipt_pdf(data)
-                    st.download_button(label="📄 Download Receipt",data=receipt_pdf,
-                    file_name=f"rocky_art_receipt_{name.replace(' ', '_')}.pdf", mime="application/pdf" )
+                   
     
                    
 col1,col2=st.columns(2)
 with col1:
-    st.write('me')
+    if st.session_state.show_receipt_button:
+        if st.button("Generate Receipt"):
+            receipt_pdf = generate_receipt_pdf(st.session_state.booking_data)
+            st.download_button(
+            label="📄 Download Receipt",
+            data=receipt_pdf,
+            file_name=f"rocky_art_receipt_{st.session_state.booking_data['name'].replace(' ', '_')}.pdf",
+            mime="application/pdf" )
+
+   
 with col2:
     if st.button('View My Work', key='view_work_button'):
         st.write('View my Works [Instagram](https://www.instagram.com/rocky__art?igsh=MXJkaTZxa2o2YXcwaA==)')
