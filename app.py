@@ -80,7 +80,8 @@ def upload_file_to_supabase(file, bucket_name="bookingsbucket"):
 # to inittialize payment with paystack
 def initialize_payment(email, amount):
     headers = {
-        "Authorization": f"Bearer {st.secrets['paystack_secret_key]}",
+        "Authorization": f"Bearer {st.secrets['paystack_secret_key']}",
+
         "Content-Type": "application/json",
     }
     data = {
