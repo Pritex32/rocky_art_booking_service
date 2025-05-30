@@ -131,6 +131,16 @@ def generate_receipt_pdf(data):
     symbol = "$" if data['currency'] == 'USD' else "₦"
     price_str = f"{symbol}{data['price']:,.2f}"
     write_label_value("Price", price_str)
+    # New fields: Payment option and payment status
+    payment_option = data.get('payment_option', 'N/A')
+    payment_status = data.get('payment_status', 'N/A')
+    amount_paid = data.get('amount_paid', 0)
+    amount_paid_str = f"{symbol}{amount_paid:,.2f}"
+
+    write_label_value("Payment Option", payment_option)
+    write_label_value("Payment Status", payment_status)
+    write_label_value("Amount Paid", amount_paid_str)
+
     pdf.ln(5)
 
     # Details section (multi cell for longer text)
