@@ -574,7 +574,7 @@ elif choice == "Admin Dashboard":
             if bookings:
                 # Filter out completed bookings
                 pending_bookings = [b for b in bookings if b.get("status") != "Completed"]
-                 for b in pending_bookings:
+                for b in pending_bookings:
                     st.markdown(f"**Name:** {b['name']}")
                     st.markdown(f"**Email:** {b['email']}")
                     st.markdown(f"**Service:** {b['service']}")
