@@ -151,7 +151,7 @@ Customer Service Team
 
    
     # Send notifications
-    send_email(to=email, subject=email_subject, body=email_body)
+    email_sent=send_email(to=email, subject=email_subject, body=email_body)
     if email_sent:
         print("Email sent successfully!")
     else:
