@@ -134,7 +134,7 @@ def send_email(to, subject, body):
         
     except Exception as e:
         print(f"❌ Failed to send email to {to}. Error: {e}")
-         return False
+        return False
 
 
 
