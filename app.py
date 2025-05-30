@@ -368,7 +368,8 @@ if choice == "Book a Service":
                 if reference_file is not None:
                     uploaded_url_obj = upload_file_to_supabase(reference_file)
                 if uploaded_url_obj is not None:
-                    file_url = uploaded_url_obj.get("publicUrl", "")
+                    
+                    file_url = uploaded_url_obj
 
             
             
