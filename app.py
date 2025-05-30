@@ -465,9 +465,9 @@ with col1:
     
     
 
-     with col2:
-         if st.button('View My Work', key='view_work_button'):
-             st.write('[View my Works on Instagram](https://www.instagram.com/rocky__art?igsh=MXJkaTZxa2o2YXcwaA==)')
+with col2:
+    if st.button('View My Work', key='view_work_button'):
+        st.write('[View my Works on Instagram](https://www.instagram.com/rocky__art?igsh=MXJkaTZxa2o2YXcwaA==)')
 
 
 
