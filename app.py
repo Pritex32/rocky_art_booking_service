@@ -363,6 +363,7 @@ if choice == "Book a Service":
 
         deadline = st.date_input("Deadline")
         details = st.text_area("Project Details / Description")
+
         # File uploader for reference file
         reference_file = st.file_uploader("Upload Reference File (optional)", type=['png', 'jpg', 'jpeg', 'pdf', 'mp4', 'mov'])
 
@@ -370,6 +371,8 @@ if choice == "Book a Service":
         reference_url = st.text_input("Or enter a Reference URL (optional)")
 
         price = convert_price(services_usd[service], currency)
+        symbol = "$" if currency == "USD" else "₦"
+
         payment_option = st.radio("Payment Option", ["Full Payment", "50% Deposit"])
         if payment_option == "50% Deposit":
             amount_to_pay = price / 2
@@ -378,12 +381,10 @@ if choice == "Book a Service":
             amount_to_pay = price
             payment_status = "Paid"
 
-         symbol_1= "$" if currency == "USD" else "₦"
-         st.markdown(f"**Amount to Pay Now:** {symbol_1}{amount_to_pay:,.0f}")
-
-
-        symbol = "$" if currency == "USD" else "₦"
+        st.markdown(f"**Amount to Pay Now:** {symbol}{amount_to_pay:,.0f}")
+        st.markdown(f"**Total Price:** {symbol}{price:,.0f}") 
         st.markdown(f"**Price:** {symbol}{price:,.0f}")
+
         submitted = st.form_submit_button("Submit Booking")
 
         if submitted:
@@ -392,53 +393,49 @@ if choice == "Book a Service":
             else:
                 init_response = initialize_payment(email, amount_to_pay)
                 if init_response["status"]:
-                payment_link = init_response["data"]["authorization_url"]
-                reference = init_response["data"]["reference"]
-                file_url = ""
-                uploaded_url_obj = None
+                    payment_link = init_response["data"]["authorization_url"]
+                    reference = init_response["data"]["reference"]
+                    file_url = ""
+                    uploaded_url_obj = None
 
-                if reference_file is not None:
-                    uploaded_url_obj = upload_file_to_supabase(reference_file)
-                if uploaded_url_obj is not None:
-                    
-                    file_url = uploaded_url_obj
+                    if reference_file is not None:
+                        uploaded_url_obj = upload_file_to_supabase(reference_file)
+                    if uploaded_url_obj is not None:
+                        file_url = uploaded_url_obj
 
-            
-            
-                data = {
-                    "name": name,
-                    "email": email,
-                    "service": service,
-                    'location': location,
-                    'phone_number':str(phone_number),
-                    "deadline":str(deadline),
-                    "details": details if details else None,
-                    'reference_url':reference_url if reference_url else None,
-                    "file_url":file_url if file_url else None,
-                    "price": price,
-                    "currency": currency
-                    "payment_status": "Pending",
-                    "payment_reference": reference,
-                    "payment_option": payment_option,
-                    "amount_paid": amount_to_pay
-                }
-               
-                response = supabase.table("bookings").insert(data).execute()
-                st.success("Redirecting to payment...")
-                st.markdown(f"[Click here to Pay]({payment_link})")
+                    data = {
+                        "name": name,
+                        "email": email,
+                        "service": service,
+                        "location": location,
+                        "phone_number": str(phone_number),
+                        "deadline": str(deadline),
+                        "details": details if details else None,
+                        "reference_url": reference_url if reference_url else None,
+                        "file_url": file_url if file_url else None,
+                        "price": price,
+                        "currency": currency,
+                        "payment_status": "Pending",
+                        "payment_reference": reference,
+                        "payment_option": payment_option,
+                        "amount_paid": amount_to_pay
+                    }
+
+                    response = supabase.table("bookings").insert(data).execute()
+                    st.success("Redirecting to payment...")
+
                 else:
                     st.error("Payment initialization failed. Try again.")
+
                 # Safe error access:
                 error = getattr(response, "error", None)
                 if error is None:
                     st.success("Booking submitted!")
-                    # Generate and show download button for receipt
                     st.session_state.booking_data = data
                     st.session_state.booking_submitted = True
-                   
+                    st.markdown(f"[Click here to Pay]({payment_link})")
                 else:
                     st.session_state.booking_submitted = False
-                    # If error object has message attribute, else fallback:
                     error_message = getattr(error, "message", str(error))
                    
     
