@@ -386,14 +386,8 @@ if choice == "Book a Service":
                 if error is None:
                     st.success("Booking submitted!")
                     # Generate and show download button for receipt
-                    if st.button("Generate Receipt"):
-                        receipt_pdf = generate_receipt_pdf(data)
-    
-                        st.download_button(
-                         label="Download Receipt",
-                         data=receipt_pdf,
-                         file_name=f"rocky_art_receipt_{data['name'].replace(' ', '_')}.pdf",
-                         mime="application/pdf" )
+                    st.session_state.booking_data = data 
+                        
                    
                 else:
                     # If error object has message attribute, else fallback:
@@ -404,6 +398,15 @@ if choice == "Book a Service":
                 
 col1, col2 = st.columns(2)
 with col1:
+    if st.session_state.booking_data is not None:
+        if st.button("Generate Receipt"):
+            receipt_pdf = generate_receipt_pdf(st.session_state.booking_data)
+            st.download_button(
+                label="📄 Download Receipt",
+                data=receipt_pdf,
+                file_name=f"rocky_art_receipt_{st.session_state.booking_data['name'].replace(' ', '_')}.pdf",
+                mime="application/pdf"
+            )
     st.write('me')
     
     
