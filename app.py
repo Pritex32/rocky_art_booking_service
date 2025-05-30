@@ -388,10 +388,10 @@ if choice == "Book a Service":
                     # Generate and show download button for receipt
                     receipt_pdf = generate_receipt_pdf(data)
                     st.download_button(
-                     label=" Download Receipt",
-                     data=receipt_pdf,
-                    file_name=f"rocky_art_receipt_{name.replace(' ', '_')}.pdf",
-                     mime="application/pdf" )
+                    label="Download Receipt",
+                    data=receipt_pdf,
+                    file_name=f"rocky_art_receipt_{data['name'].replace(' ', '_')}.pdf",
+                     mime="application/pdf")
                    
                 else:
                     # If error object has message attribute, else fallback:
