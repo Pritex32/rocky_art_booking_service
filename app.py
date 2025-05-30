@@ -52,35 +52,36 @@ def get_supabase_client():
 supabase = get_supabase_client() # use this to call the supabase database
 
 
-
-
-
-
-
 def upload_file_to_supabase(file, bucket_name="bookingsbucket"):
-    try:
-        
-        # Read file bytes
-        file_bytes = file.read()
-        
-        # Create unique filename
-        filename = f"{int(time.time())}_{file.name}"
-        
-        # Upload file bytes to Supabase storage bucket
-        response = supabase.storage.from_(bucket_name).upload(filename, file_bytes)
-        
-        # Check if upload failed
-        if hasattr(response, 'error') and response.error is not None:
-            st.error(f"Failed to upload file: {response.error['message']}")
-            return None
-        
-        # Get public URL for the uploaded file
-        public_url = supabase.storage.from_(bucket_name).get_public_url(filename)
-        return public_url
-    
-    except Exception as e:
-        st.error(f"Exception during file upload: {e}")
-        return None
+    try:
+        import time
+        # Read file bytes
+        file_bytes = file.read()
+        
+        # Create unique filename
+        filename = f"{int(time.time())}_{file.name}"
+        
+        # Upload file bytes to Supabase storage bucket
+        response = supabase.storage.from_(bucket_name).upload(filename, file_bytes)
+        
+        # Check if upload failed
+        if hasattr(response, 'error') and response.error is not None:
+            st.error(f"Failed to upload file: {response.error['message']}")
+            return None
+        
+        # Get public URL for the uploaded file
+        public_url = supabase.storage.from_(bucket_name).get_public_url(filename)
+        return public_url
+    
+    except Exception as e:
+        st.error(f"Exception during file upload: {e}")
+        return None
+        
+
+
+
+
+
 
 
 
