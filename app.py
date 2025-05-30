@@ -379,12 +379,12 @@ if choice == "Book a Service":
                     st.download_button(label="📄 Download Receipt",
                      data=receipt_pdf,
                     file_name=f"rocky_art_receipt_{name.replace(' ', '_')}.pdf", mime="application/pdf" )
-        col1,col2=st.columns(2)
-        with col1:
-            st.write('me')
-        with col2:
-            if st.button('View My Work'):
-                st.write('View my Works [Instagram](https://www.instagram.com/rocky__art?igsh=MXJkaTZxa2o2YXcwaA==)')
+col1,col2=st.columns(2)
+with col1:
+    st.write('me')
+with col2:
+    if st.button('View My Work'):
+        st.write('View my Works [Instagram](https://www.instagram.com/rocky__art?igsh=MXJkaTZxa2o2YXcwaA==)')
 
 
 
