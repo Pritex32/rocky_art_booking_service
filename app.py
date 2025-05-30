@@ -306,6 +306,11 @@ with col2:
 menu = ["Book a Service","Admin Login/Register", "Admin Dashboard"]
 # Show dropdown only if not logged in or if not on admin dashboard
 
+# Initialize session state
+if "show_receipt_button" not in st.session_state:
+    st.session_state.show_receipt_button = False
+if "booking_data" not in st.session_state:
+    st.session_state.booking_data = None
 
 if not st.session_state.logged_in:
     choice = st.selectbox("Menu", menu, index=0)
@@ -316,9 +321,7 @@ choice = st.session_state.menu_page
 
 if choice == "Book a Service":
     st.header("Submit a Booking")
-    show_receipt_button = False
-    data = None
-
+    
     with st.form("booking_form"):
         name = st.text_input("Full Name")
         email = st.text_input("Email")
@@ -380,31 +383,29 @@ if choice == "Book a Service":
                 error = getattr(response, "error", None)
                 if error is None:
                     st.success("Booking submitted!")
-                    show_receipt_button = True
+                    st.session_state.show_receipt_button = True
+                    st.session_state.booking_data = data
                 else:
                     # If error object has message attribute, else fallback:
                     error_message = getattr(error, "message", str(error))
                    
     
                    
-col1,col2=st.columns(2)
-with col1:
-    # Show the receipt button after the form (outside the form)
-    if show_receipt_button and data is not None:
-        if st.button("Generate Receipt"):
-            receipt_pdf = generate_receipt_pdf(data)
-            st.download_button(
-            label="📄 Download Receipt",
-            data=receipt_pdf,
-            file_name=f"rocky_art_receipt_{data['name'].replace(' ', '_')}.pdf",
-            mime="application/pdf"
-        )
+col1, col2 = st.columns(2)
+    with col1:
+        if st.session_state.show_receipt_button and st.session_state.booking_data:
+            if st.button("Generate Receipt"):
+                receipt_pdf = generate_receipt_pdf(st.session_state.booking_data)
+                st.download_button(
+                    label="📄 Download Receipt",
+                    data=receipt_pdf,
+                    file_name=f"rocky_art_receipt_{st.session_state.booking_data['name'].replace(' ', '_')}.pdf",
+                    mime="application/pdf"
+                )
 
-   
-with col2:
-    if st.button('View My Work', key='view_work_button'):
-        st.write('View my Works [Instagram](https://www.instagram.com/rocky__art?igsh=MXJkaTZxa2o2YXcwaA==)')
-
+    with col2:
+        if st.button('View My Work', key='view_work_button'):
+            st.write('[View my Works on Instagram](https://www.instagram.com/rocky__art?igsh=MXJkaTZxa2o2YXcwaA==)')
 
 
 
