@@ -423,7 +423,7 @@ elif choice == "Admin Dashboard":
                             update_response = supabase.table("bookings").update( {"status": "Completed"}).eq("id", b['id']).execute()
 
                             if 'error' not in update_response or update_response['error'] is None:
-                                send_notifications(b)
+                                email_sent=send_notifications(b)
                                 st.success("Booking marked as completed.")
                                 if email_sent:
                                     st.success("Booking marked as completed and email sent successfully.")
