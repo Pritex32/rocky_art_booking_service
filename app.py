@@ -79,7 +79,7 @@ def upload_file_to_supabase(file, bucket_name="bookingsbucket"):
         
 # to inittialize payment with paystack
 def initialize_payment(email, amount):
-    paystack_secret_key = st.secrets["paystack"]["paystack_secret_key"]
+    paystack_secret_key = 'sk_test_2b9eaa646ab366b5a0062b70662d54fcf9494b65'
     headers = {
         "Authorization": f"Bearer {st.secrets['paystack_secret_key']}",
 
