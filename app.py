@@ -8,7 +8,8 @@ st.set_page_config(
 import bcrypt
 import pandas as pd
 from streamlit_option_menu import option_menu
-from datetime import datetime
+
+from datetime import datetime, date
 import json
 import time
 from streamlit_cookies_manager import EncryptedCookieManager
@@ -89,7 +90,8 @@ def generate_receipt_pdf(data):
     for key, value in data.items():
         pdf.cell(200, 10, txt=f"{key.capitalize().replace('_', ' ')}: {value}", ln=True)
 
-    pdf.cell(200, 10, txt=f"Date Issued: {datetime.date.today()}", ln=True)
+    # Then in your function:
+    pdf.cell(200, 10, txt=f"Date Issued: {date.today()}", ln=True)
 
     # Save to a BytesIO object
     pdf_output = io.BytesIO()
