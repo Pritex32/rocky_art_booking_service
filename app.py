@@ -427,8 +427,8 @@ elif choice == "Admin Dashboard":
                                 st.success("Booking marked as completed.")
                                 if email_sent:
                                     st.success("Booking marked as completed and email sent successfully.")
-                                  else:
-                                      st.error("Booking marked as completed but email failed to send.")
+                                else:
+                                    st.error("Booking marked as completed but email failed to send.")
                                 time.sleep(2)
                                 st.rerun()
                             else:
