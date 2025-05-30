@@ -386,7 +386,18 @@ if choice == "Book a Service":
                 if error is None:
                     st.success("Booking submitted!")
                     # Generate and show download button for receipt
-                    st.session_state.booking_data = data 
+                    st.session_state.booking_data = {
+                    "name": name,
+                    "email": email,
+                     "service": service,
+                    "location": location,
+                    "phone_number": str(phone_number),
+                     "deadline": str(deadline),
+                     "details": details if details else None,
+                     "reference_url": reference_url if reference_url else None,
+                      "file_url": file_url if file_url else None,
+                      "price": price,
+                       "currency": currency} 
                         
                    
                 else:
