@@ -500,8 +500,8 @@ if choice == "Book a Service":
                 data=receipt_pdf,
                 file_name=f"rocky_art_receipt_{data['name'].replace(' ', '_')}.pdf",
                 mime="application/pdf" )
-          else:
-              st.warning("No booking data available yet. Please submit the form first.")
+        else:
+            st.warning("No booking data available yet. Please submit the form first.")
 
     
     
