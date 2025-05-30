@@ -51,11 +51,12 @@ def get_supabase_client():
 supabase = get_supabase_client() # use this to call the supabase database
 
 # to generate receipt out the booking form
-# Add this at the top of your app to persist session state
+# Initialize session state variables if not already set
 if "booking_data" not in st.session_state:
     st.session_state.booking_data = None
 if "show_receipt_button" not in st.session_state:
     st.session_state.show_receipt_button = False
+
 
 def upload_file_to_supabase(file, bucket_name="bookingsbucket"):
     try:
@@ -386,15 +387,15 @@ if choice == "Book a Service":
                    
 col1,col2=st.columns(2)
 with col1:
-      # Show Generate Receipt button only if booking was submitted
     if st.session_state.show_receipt_button:
         if st.button("Generate Receipt"):
             receipt_pdf = generate_receipt_pdf(st.session_state.booking_data)
             st.download_button(
-            label="📄 Download Receipt",
-            data=receipt_pdf,
-            file_name=f"rocky_art_receipt_{st.session_state.booking_data['name'].replace(' ', '_')}.pdf",
-            mime="application/pdf" )
+                label="📄 Download Receipt",
+                data=receipt_pdf,
+                file_name=f"rocky_art_receipt_{st.session_state.booking_data['name'].replace(' ', '_')}.pdf",
+                mime="application/pdf"
+            )
 
    
 with col2:
