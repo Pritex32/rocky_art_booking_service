@@ -84,7 +84,7 @@ def generate_receipt_pdf(data):
     pdf.add_page()
     pdf.set_font("Arial", size=12)
 
-    pdf.cell(200, 10, txt=" Booking Receipt", ln=True, align='C')
+    pdf.cell(200, 10, txt="Rocky Art Booking Receipt", ln=True, align='C')
     pdf.cell(200, 10, txt=f"Date Issued: {date.today()}", ln=True)
 
     pdf.cell(200, 10, txt=f"Name: {data['name']}", ln=True)
@@ -419,7 +419,7 @@ with col1:
     )
     else:
         st.warning("No booking data found. Please submit the form first.")
-    st.write('me')
+    
     
     
 
