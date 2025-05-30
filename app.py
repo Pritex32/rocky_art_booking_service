@@ -391,21 +391,22 @@ if choice == "Book a Service":
                    
     
                    
+                
 col1, col2 = st.columns(2)
-    with col1:
-        if st.session_state.show_receipt_button and st.session_state.booking_data:
-            if st.button("Generate Receipt"):
-                receipt_pdf = generate_receipt_pdf(st.session_state.booking_data)
-                st.download_button(
+with col1:
+    if st.session_state.show_receipt_button and st.session_state.booking_data:
+        if st.button("Generate Receipt"):
+            receipt_pdf = generate_receipt_pdf(st.session_state.booking_data)
+            st.download_button(
                     label="📄 Download Receipt",
                     data=receipt_pdf,
                     file_name=f"rocky_art_receipt_{st.session_state.booking_data['name'].replace(' ', '_')}.pdf",
                     mime="application/pdf"
                 )
 
-    with col2:
-        if st.button('View My Work', key='view_work_button'):
-            st.write('[View my Works on Instagram](https://www.instagram.com/rocky__art?igsh=MXJkaTZxa2o2YXcwaA==)')
+ with col2:
+     if st.button('View My Work', key='view_work_button'):
+         st.write('[View my Works on Instagram](https://www.instagram.com/rocky__art?igsh=MXJkaTZxa2o2YXcwaA==)')
 
 
 
