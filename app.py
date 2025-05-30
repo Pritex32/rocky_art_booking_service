@@ -582,12 +582,22 @@ elif choice == "Admin Dashboard":
                     st.markdown(f"**Payment_Status:** {b.get('payment_status', 'Unknown')}")
 
                     st.markdown(f"**Price:** {b.get('price', 'N/A')}")
-                    bookings = st.session_state.get("booking_data", {})
-                    if bookings.get("file_url"):
-                        st.markdown(f"[📎 View Uploaded File]({booking['file_url']})", unsafe_allow_html=True)
+                    file_url = b.get("file_url")
+                    if file_url:
+                        st.markdown(f"[📎 View Uploaded File]({file_url})", unsafe_allow_html=True)
+                        try:
+                            response = requests.get(file_url)
+                            response.raise_for_status()
+                            st.download_button(
+                                "Download File",
+                                data=response.content,
+                                file_name="reference_file",
+                                mime="application/octet-stream")
+                            st.download_button("Download File", data=requests.get(bookings['file_url']).content, file_name="reference_file", mime="application/octet-stream")
+                        except Exception as e:
+                            st.error("Could not download the file.")
                     else:
-                        st.write("No file uploaded.")
-                    st.download_button("Download File", data=requests.get(bookings['file_url']).content, file_name="reference_file", mime="application/octet-stream")
+                        st.write("No file uploaded.")      
 
 
                     st.markdown(f"**Submitted At:** {b['created_at']}")
