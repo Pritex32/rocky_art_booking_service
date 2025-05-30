@@ -430,6 +430,10 @@ if choice == "Book a Service":
             if not name or not email:
                 st.error("Please fill in all required fields.")
             else:
+                 if currency == "USD":
+                     amount_to_pay_in_naira = convert_price(amount_to_pay, "NGN")
+                 else:
+                     amount_to_pay_in_naira = amount_to_pay
                 init_response = initialize_payment(email, amount_to_pay)
                 if init_response["status"]:
                     payment_link = init_response["data"]["authorization_url"]
