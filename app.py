@@ -105,10 +105,44 @@ def initialize_payment(email, amount):
 def generate_receipt_pdf(data):
     pdf = FPDF()
     pdf.add_page()
-    pdf.set_font("Arial", size=12)
+     # Title - bold and larger font
+    pdf.set_font("Arial", 'B', 16)
 
     pdf.cell(200, 10, txt="Rocky Art Booking Receipt", ln=True, align='C')
+    # Date Issued
+    pdf.set_font("Arial", '', 12)
     pdf.cell(200, 10, txt=f"Date Issued: {date.today()}", ln=True)
+    pdf.ln(5)
+     # Customer info - label bold, info normal
+    def write_label_value(label, value):
+        pdf.set_font("Arial", 'B', 12)
+        pdf.cell(40, 10, f"{label}:")
+        pdf.set_font("Arial", '', 12)
+        pdf.cell(0, 10, str(value), ln=True)
+    write_label_value("Name", data['name'])
+    write_label_value("Email", data['email'])
+    write_label_value("Phone", data['phone_number'])
+    write_label_value("Service", data['service'])
+    write_label_value("Location", data['location'])
+    write_label_value("Deadline", data['deadline'])
+    write_label_value("Currency", data['currency'])
+
+    # Format price with symbol
+    symbol = "$" if data['currency'] == 'USD' else "₦"
+    price_str = f"{symbol}{data['price']:,.2f}"
+    write_label_value("Price", price_str)
+     pdf.ln(5)
+
+    # Details section (multi cell for longer text)
+    if data.get("details"):
+        pdf.set_font("Arial", 'B', 12)
+        pdf.cell(0, 10, "Details:", ln=True)
+        pdf.set_font("Arial", '', 12)
+        pdf.multi_cell(0, 10, data['details'])
+     # Optional: Add a footer line or thank you note
+    pdf.ln(10)
+    pdf.set_font("Arial", 'I', 10)
+    pdf.cell(0, 10, "Thank you for your booking!", ln=True, align='C
 
     pdf.cell(200, 10, txt=f"Name: {data['name']}", ln=True)
     pdf.cell(200, 10, txt=f"Email: {data['email']}", ln=True)
@@ -542,6 +576,8 @@ elif choice == "Admin Dashboard":
                     st.markdown(f"**Deadline:** {b['deadline']}")
                     st.markdown(f"**Details:** {b['details']}")
                     st.markdown(f"**Status:** {b.get('status', 'Pending')}")
+                    st.markdown(f"**Payment_Status:** {b.get('payment_status', 'Unknown')}")
+
                     st.markdown(f"**Price:** {b.get('price', 'N/A')}")
                     if booking.get("file_url"):
                         st.markdown(f"[📎 View Uploaded File]({booking['file_url']})", unsafe_allow_html=True)
