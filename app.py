@@ -50,12 +50,7 @@ def get_supabase_client():
 # Initialize Supabase client
 supabase = get_supabase_client() # use this to call the supabase database
 
-# to generate receipt out the booking form
-# Initialize session state variables if not already set
-if "booking_data" not in st.session_state:
-    st.session_state.booking_data = None
-if "show_receipt_button" not in st.session_state:
-    st.session_state.show_receipt_button = False
+
 
 
 def upload_file_to_supabase(file, bucket_name="bookingsbucket"):
@@ -291,6 +286,12 @@ def logout():
     st.session_state.logged_in = False
     st.session_state.current_user = None
     st.success("Logged out successfully")
+
+if "booking_data" not in st.session_state:
+    st.session_state.booking_data = {}
+   
+if "show_receipt_button" not in st.session_state:
+    st.session_state.show_receipt_button = False
 
 
 col1,col2=st.columns(2)
