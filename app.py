@@ -399,11 +399,11 @@ if choice == "Book a Service":
                 
 col1, col2 = st.columns(2)
 with col1:
-    if "booking_data" in st.session_state and isinstance(st.session_state.booking_data, dict):
+    if st.session_state.get("booking_submitted", False):  # ✅ only if submitted
         data = st.session_state.booking_data
         required_keys = ["name", "email", "service", "location", "phone_number", "deadline", "price", "currency"]
-
         missing_keys = [key for key in required_keys if key not in data]
+
         if missing_keys:
             st.error(f"Missing data fields in booking_data: {', '.join(missing_keys)}")
         else:
@@ -412,7 +412,8 @@ with col1:
             label="Download Receipt",
             data=receipt_pdf,
             file_name=f"rocky_art_receipt_{data['name'].replace(' ', '_')}.pdf",
-            mime="application/pdf" )
+            mime="application/pdf"
+        )
     else:
         st.warning("No booking data available yet. Please submit the form first.")
 
