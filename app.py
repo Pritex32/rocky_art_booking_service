@@ -8,7 +8,7 @@ st.set_page_config(
 import bcrypt
 import pandas as pd
 from streamlit_option_menu import option_menu
-
+from io import BytesIO
 from datetime import datetime, date
 import json
 import time
@@ -84,21 +84,25 @@ def generate_receipt_pdf(data):
     pdf.add_page()
     pdf.set_font("Arial", size=12)
 
-    pdf.cell(200, 10, txt="Rocky Art Booking Receipt", ln=True, align="C")
-    pdf.ln(10)
-
-    for key, value in data.items():
-        pdf.cell(200, 10, txt=f"{key.capitalize().replace('_', ' ')}: {value}", ln=True)
-
-    # Then in your function:
+    pdf.cell(200, 10, txt="Booking Receipt", ln=True, align='C')
     pdf.cell(200, 10, txt=f"Date Issued: {date.today()}", ln=True)
 
-    # Save to a BytesIO object
-    pdf_output = io.BytesIO()
-    pdf.output(pdf_output)
-    pdf_output.seek(0)
-    return pdf_output
+    pdf.cell(200, 10, txt=f"Name: {data['name']}", ln=True)
+    pdf.cell(200, 10, txt=f"Email: {data['email']}", ln=True)
+    pdf.cell(200, 10, txt=f"Phone: {data['phone_number']}", ln=True)
+    pdf.cell(200, 10, txt=f"Service: {data['service']}", ln=True)
+    pdf.cell(200, 10, txt=f"Location: {data['location']}", ln=True)
+    pdf.cell(200, 10, txt=f"Deadline: {data['deadline']}", ln=True)
+    pdf.cell(200, 10, txt=f"Currency: {data['currency']}", ln=True)
+    pdf.cell(200, 10, txt=f"Price: {data['price']}", ln=True)
 
+    if data.get("details"):
+        pdf.multi_cell(0, 10, txt=f"Details:\n{data['details']}")
+
+    # Export PDF to bytes
+    pdf_output = BytesIO()
+    pdf.output(pdf_output)
+    return pdf_output.getvalue()
    
 # for rediction to admin dashbooard
 if "logged_in" not in st.session_state:
