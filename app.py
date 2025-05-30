@@ -77,8 +77,20 @@ def upload_file_to_supabase(file, bucket_name="bookingsbucket"):
         st.error(f"Exception during file upload: {e}")
         return None
         
-
-
+# to inittialize payment with paystack
+def initialize_payment(email, amount):
+    headers = {
+        "Authorization": f"Bearer {st.secrets['PAYSTACK_SECRET_KEY']}",
+        "Content-Type": "application/json",
+    }
+    data = {
+        "email": email,
+        "amount": int(amount * 100),  # Paystack expects amount in Kobo
+        "reference": str(uuid.uuid4()),
+        "callback_url": "https://yourdomain.com/verify_payment",  # For webhook handling
+    }
+    res = requests.post("https://api.paystack.co/transaction/initialize", headers=headers, json=data)
+    return res.json()
 
 
 
@@ -254,6 +266,10 @@ def submit_booking(name, email, service, location,phone_number,deadline, details
         "file_url": file_url if file_url else None,
         "price": price,
         "currency": currency  # New column, add to your supabase table!
+        "payment_status": "Pending",
+        "payment_reference": reference,
+        "payment_option": payment_option,
+        "amount_paid": amount_to_pay
     }
 
     response = supabase.table("bookings").insert(data).execute()
@@ -354,6 +370,18 @@ if choice == "Book a Service":
         reference_url = st.text_input("Or enter a Reference URL (optional)")
 
         price = convert_price(services_usd[service], currency)
+        payment_option = st.radio("Payment Option", ["Full Payment", "50% Deposit"])
+        if payment_option == "50% Deposit":
+            amount_to_pay = price / 2
+            payment_status = "Partial"
+        else:
+            amount_to_pay = price
+            payment_status = "Paid"
+
+         symbol_1= "$" if currency == "USD" else "₦"
+         st.markdown(f"**Amount to Pay Now:** {symbol_1}{amount_to_pay:,.0f}")
+
+
         symbol = "$" if currency == "USD" else "₦"
         st.markdown(f"**Price:** {symbol}{price:,.0f}")
         submitted = st.form_submit_button("Submit Booking")
@@ -362,6 +390,10 @@ if choice == "Book a Service":
             if not name or not email:
                 st.error("Please fill in all required fields.")
             else:
+                init_response = initialize_payment(email, amount_to_pay)
+                if init_response["status"]:
+                payment_link = init_response["data"]["authorization_url"]
+                reference = init_response["data"]["reference"]
                 file_url = ""
                 uploaded_url_obj = None
 
@@ -385,9 +417,17 @@ if choice == "Book a Service":
                     "file_url":file_url if file_url else None,
                     "price": price,
                     "currency": currency
+                    "payment_status": "Pending",
+                    "payment_reference": reference,
+                    "payment_option": payment_option,
+                    "amount_paid": amount_to_pay
                 }
                
                 response = supabase.table("bookings").insert(data).execute()
+                st.success("Redirecting to payment...")
+                st.markdown(f"[Click here to Pay]({payment_link})")
+                else:
+                    st.error("Payment initialization failed. Try again.")
                 # Safe error access:
                 error = getattr(response, "error", None)
                 if error is None:
@@ -404,34 +444,33 @@ if choice == "Book a Service":
     
                    
                 
-col1, col2 = st.columns(2)
-with col1:
-    if st.session_state.get("booking_submitted", False):  # ✅ only if submitted
-        data = st.session_state.get("booking_data", {})
+    col1, col2 = st.columns(2)
+    with col1:
+        if st.session_state.get("booking_submitted", False):  # ✅ only if submitted
+            data = st.session_state.get("booking_data", {})
         
-        data = st.session_state.booking_data
-        required_keys = ["name", "email", "service", "location", "phone_number", "deadline", "price", "currency"]
-        missing_keys = [key for key in required_keys if key not in data]
+            data = st.session_state.booking_data
+            required_keys = ["name", "email", "service", "location", "phone_number", "deadline", "price", "currency"]
+            missing_keys = [key for key in required_keys if key not in data]
 
-        if missing_keys:
-            st.error(f"Missing data fields in booking_data: {', '.join(missing_keys)}")
+            if missing_keys:
+                st.error(f"Missing data fields in booking_data: {', '.join(missing_keys)}")
+            else:
+                receipt_pdf = generate_receipt_pdf(data)
+                st.download_button(
+                label="Download Receipt",
+                data=receipt_pdf,
+                file_name=f"rocky_art_receipt_{data['name'].replace(' ', '_')}.pdf",
+                mime="application/pdf" )
         else:
-            receipt_pdf = generate_receipt_pdf(data)
-            st.download_button(
-            label="Download Receipt",
-            data=receipt_pdf,
-            file_name=f"rocky_art_receipt_{data['name'].replace(' ', '_')}.pdf",
-            mime="application/pdf"
-        )
-    else:
-        st.warning("No booking data available yet. Please submit the form first.")
+            st.warning("No booking data available yet. Please submit the form first.")
 
     
     
 
-with col2:
-     if st.button('View My Work', key='view_work_button'):
-         st.write('[View my Works on Instagram](https://www.instagram.com/rocky__art?igsh=MXJkaTZxa2o2YXcwaA==)')
+     with col2:
+         if st.button('View My Work', key='view_work_button'):
+             st.write('[View my Works on Instagram](https://www.instagram.com/rocky__art?igsh=MXJkaTZxa2o2YXcwaA==)')
 
 
 
@@ -503,6 +542,12 @@ elif choice == "Admin Dashboard":
                     st.markdown(f"**Details:** {b['details']}")
                     st.markdown(f"**Status:** {b.get('status', 'Pending')}")
                     st.markdown(f"**Price:** {b.get('price', 'N/A')}")
+                    if booking.get("file_url"):
+                        st.markdown(f"[📎 View Uploaded File]({booking['file_url']})", unsafe_allow_html=True)
+                    else:
+                        st.write("No file uploaded.")
+                    st.download_button("Download File", data=requests.get(booking['file_url']).content, file_name="reference_file", mime="application/octet-stream")
+
 
                     st.markdown(f"**Submitted At:** {b['created_at']}")
                     st.markdown("---")
