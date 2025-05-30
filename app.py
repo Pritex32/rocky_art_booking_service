@@ -59,7 +59,7 @@ supabase = get_supabase_client() # use this to call the supabase database
 
 def upload_file_to_supabase(file, bucket_name="bookingsbucket"):
     try:
-        import time
+        
         # Read file bytes
         file_bytes = file.read()
         
