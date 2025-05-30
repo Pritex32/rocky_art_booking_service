@@ -387,8 +387,10 @@ if choice == "Book a Service":
                     st.success("Booking submitted!")
                     # Generate and show download button for receipt
                     st.session_state.booking_data = data
+                    st.session_state.booking_submitted = True
                    
                 else:
+                    st.session_state.booking_submitted = False
                     # If error object has message attribute, else fallback:
                     error_message = getattr(error, "message", str(error))
                    
