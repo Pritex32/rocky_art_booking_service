@@ -107,8 +107,11 @@ def send_email(to, subject, body):
         server.sendmail(sender_email, to, msg.as_string())
         server.quit()
         print(f"✅ Email sent to {to}")
+        return True
+        
     except Exception as e:
         print(f"❌ Failed to send email to {to}. Error: {e}")
+         return False
 
 
 
@@ -130,7 +133,7 @@ def send_notifications(bookings):
     
     if not email or not name or not service:
         print("Missing required booking info.")
-        return  # Don’t send anything if critical info is missing
+        return False  # Don’t send anything if critical info is missing
 
     # Send Email
     email_subject = f"🎉 {name}, your {service} service is complete — Action Required"
