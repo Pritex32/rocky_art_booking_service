@@ -400,6 +400,8 @@ if choice == "Book a Service":
 col1, col2 = st.columns(2)
 with col1:
     if st.session_state.get("booking_submitted", False):  # ✅ only if submitted
+        data = st.session_state.get("booking_data", {})
+        
         data = st.session_state.booking_data
         required_keys = ["name", "email", "service", "location", "phone_number", "deadline", "price", "currency"]
         missing_keys = [key for key in required_keys if key not in data]
