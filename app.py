@@ -306,11 +306,7 @@ with col2:
 menu = ["Book a Service","Admin Login/Register", "Admin Dashboard"]
 # Show dropdown only if not logged in or if not on admin dashboard
 
-# Initialize session state
-if "show_receipt_button" not in st.session_state:
-    st.session_state.show_receipt_button = False
-if "booking_data" not in st.session_state:
-    st.session_state.booking_data = None
+
 
 if not st.session_state.logged_in:
     choice = st.selectbox("Menu", menu, index=0)
@@ -383,8 +379,14 @@ if choice == "Book a Service":
                 error = getattr(response, "error", None)
                 if error is None:
                     st.success("Booking submitted!")
-                    st.session_state.show_receipt_button = True
-                    st.session_state.booking_data = data
+                    # Generate and show download button for receipt
+                    receipt_pdf = generate_receipt_pdf(data)
+                    st.download_button(
+                     label=" Download Receipt",
+                     data=receipt_pdf,
+                    file_name=f"rocky_art_receipt_{name.replace(' ', '_')}.pdf",
+                     mime="application/pdf" )
+                   
                 else:
                     # If error object has message attribute, else fallback:
                     error_message = getattr(error, "message", str(error))
@@ -394,17 +396,11 @@ if choice == "Book a Service":
                 
 col1, col2 = st.columns(2)
 with col1:
-    if st.session_state.show_receipt_button and st.session_state.booking_data:
-        if st.button("Generate Receipt"):
-            receipt_pdf = generate_receipt_pdf(st.session_state.booking_data)
-            st.download_button(
-                    label="📄 Download Receipt",
-                    data=receipt_pdf,
-                    file_name=f"rocky_art_receipt_{st.session_state.booking_data['name'].replace(' ', '_')}.pdf",
-                    mime="application/pdf"
-                )
+    st.write('me')
+    
+    
 
- with col2:
+with col2:
      if st.button('View My Work', key='view_work_button'):
          st.write('[View my Works on Instagram](https://www.instagram.com/rocky__art?igsh=MXJkaTZxa2o2YXcwaA==)')
 
