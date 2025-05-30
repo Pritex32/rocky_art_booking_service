@@ -587,7 +587,7 @@ elif choice == "Admin Dashboard":
                         st.markdown(f"[📎 View Uploaded File]({booking['file_url']})", unsafe_allow_html=True)
                     else:
                         st.write("No file uploaded.")
-                    st.download_button("Download File", data=requests.get(booking['file_url']).content, file_name="reference_file", mime="application/octet-stream")
+                    st.download_button("Download File", data=requests.get(bookings['file_url']).content, file_name="reference_file", mime="application/octet-stream")
 
 
                     st.markdown(f"**Submitted At:** {b['created_at']}")
