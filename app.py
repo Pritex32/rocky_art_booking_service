@@ -84,7 +84,7 @@ def generate_receipt_pdf(data):
     pdf.add_page()
     pdf.set_font("Arial", size=12)
 
-    pdf.cell(200, 10, txt="Booking Receipt", ln=True, align='C')
+    pdf.cell(200, 10, txt="📄 Booking Receipt", ln=True, align='C')
     pdf.cell(200, 10, txt=f"Date Issued: {date.today()}", ln=True)
 
     pdf.cell(200, 10, txt=f"Name: {data['name']}", ln=True)
@@ -99,10 +99,10 @@ def generate_receipt_pdf(data):
     if data.get("details"):
         pdf.multi_cell(0, 10, txt=f"Details:\n{data['details']}")
 
-    # Export PDF to bytes
-    pdf_output = BytesIO()
-    pdf.output(pdf_output)
-    return pdf_output.getvalue()
+    buffer = BytesIO()
+    pdf.output(buffer)
+    buffer.seek(0)
+    return buffer.read()
    
 # for rediction to admin dashbooard
 if "logged_in" not in st.session_state:
@@ -386,12 +386,14 @@ if choice == "Book a Service":
                 if error is None:
                     st.success("Booking submitted!")
                     # Generate and show download button for receipt
-                    receipt_pdf = generate_receipt_pdf(data)
-                    st.download_button(
-                    label="Download Receipt",
-                    data=receipt_pdf,
-                    file_name=f"rocky_art_receipt_{data['name'].replace(' ', '_')}.pdf",
-                     mime="application/pdf")
+                    if st.button("Generate Receipt"):
+                        receipt_pdf = generate_receipt_pdf(data)
+    
+                        st.download_button(
+                         label="📄 Download Receipt",
+                         data=receipt_pdf,
+                         file_name=f"rocky_art_receipt_{data['name'].replace(' ', '_')}.pdf",
+                         mime="application/pdf" )
                    
                 else:
                     # If error object has message attribute, else fallback:
