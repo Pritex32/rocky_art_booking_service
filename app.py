@@ -467,8 +467,8 @@ if choice == "Book a Service":
                     response = supabase.table("bookings").insert(data).execute()
                     st.success("Redirecting to payment...")
 
-                else:
-                    st.error("Payment initialization failed. Try again.")
+                 else:
+                     st.error("Payment initialization failed. Try again.")
 
                 # Safe error access:
                 error = getattr(response, "error", None)
