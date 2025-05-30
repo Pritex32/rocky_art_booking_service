@@ -316,6 +316,8 @@ choice = st.session_state.menu_page
 
 if choice == "Book a Service":
     st.header("Submit a Booking")
+    show_receipt_button = False
+    data = None
 
     with st.form("booking_form"):
         name = st.text_input("Full Name")
@@ -378,8 +380,7 @@ if choice == "Book a Service":
                 error = getattr(response, "error", None)
                 if error is None:
                     st.success("Booking submitted!")
-                    st.session_state.booking_data = data
-                    st.session_state.show_receipt_button = True
+                    show_receipt_button = True
                 else:
                     # If error object has message attribute, else fallback:
                     error_message = getattr(error, "message", str(error))
@@ -388,15 +389,16 @@ if choice == "Book a Service":
                    
 col1,col2=st.columns(2)
 with col1:
-    if st.session_state.show_receipt_button:
+    # Show the receipt button after the form (outside the form)
+    if show_receipt_button and data is not None:
         if st.button("Generate Receipt"):
-            receipt_pdf = generate_receipt_pdf(st.session_state.booking_data)
+            receipt_pdf = generate_receipt_pdf(data)
             st.download_button(
-                label="📄 Download Receipt",
-                data=receipt_pdf,
-                file_name=f"rocky_art_receipt_{st.session_state.booking_data['name'].replace(' ', '_')}.pdf",
-                mime="application/pdf"
-            )
+            label="📄 Download Receipt",
+            data=receipt_pdf,
+            file_name=f"rocky_art_receipt_{data['name'].replace(' ', '_')}.pdf",
+            mime="application/pdf"
+        )
 
    
 with col2:
