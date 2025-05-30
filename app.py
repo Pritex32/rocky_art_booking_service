@@ -266,7 +266,7 @@ def submit_booking(name, email, service, location,phone_number,deadline, details
         'reference_url':reference_url if reference_url else None,
         "file_url": file_url if file_url else None,
         "price": price,
-        "currency": currency  # New column, add to your supabase table!
+        "currency": currency,  # New column, add to your supabase table!
         "payment_status": "Pending",
         "payment_reference": reference,
         "payment_option": payment_option,
