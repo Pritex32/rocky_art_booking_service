@@ -375,13 +375,14 @@ if choice == "Book a Service":
                     # If error object has message attribute, else fallback:
                     error_message = getattr(error, "message", str(error))
                     st.error(f"Error: {error_message}")
+                    receipt_pdf = generate_receipt_pdf(data)
+                    st.download_button(label="📄 Download Receipt",data=receipt_pdf,
+                    file_name=f"rocky_art_receipt_{name.replace(' ', '_')}.pdf", mime="application/pdf" )
+    
                    
 col1,col2=st.columns(2)
 with col1:
-    receipt_pdf = generate_receipt_pdf(data)
-    st.download_button(label="📄 Download Receipt",data=receipt_pdf,
-    file_name=f"rocky_art_receipt_{name.replace(' ', '_')}.pdf", mime="application/pdf" )
-    
+    st.write('me')
 with col2:
     if st.button('View My Work', key='view_work_button'):
         st.write('View my Works [Instagram](https://www.instagram.com/rocky__art?igsh=MXJkaTZxa2o2YXcwaA==)')
