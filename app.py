@@ -83,12 +83,13 @@ def upload_file_to_supabase(file, bucket_name="bookingsbucket"):
 def list_files_in_bucket(bucket_name):
     data, error = supabase.storage.from_(bucket_name).list()
     if error:
-        st.error(f"Error listing files: {error.message}")
+        st.error(f"Error listing files: {error}")  # Just use error directly
         return []
     if data:
         return data
     else:
         return []
+
 
         
 # to inittialize payment with paystack
