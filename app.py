@@ -126,30 +126,28 @@ class PDF(FPDF):
         # to ensure that this symbol # is replace everywhere in this code
 
 
-def generate_receipt_pdf(data):
+# for receipt generation
+    def generate_receipt_pdf(data):
     pdf = FPDF()
     pdf.add_page()
-     # Title - bold and larger font
- # Load Unicode font
-   
+
+    # Title - bold and larger font
     pdf.set_font("Arial", 'B', 16)
- 
-
-
     pdf.cell(200, 10, txt="Rocky Art Booking Receipt", ln=True, align='C')
+
     # Date Issued
-    
     pdf.set_font("Arial", '', 12)
     pdf.cell(200, 10, txt=f"Date Issued: {date.today()}", ln=True)
     pdf.ln(5)
-     # Customer info - label bold, info normal
+
+    # Helper function for label-value pairs
     def write_label_value(label, value):
-        pdf.set_font("Arial", '', 12)
+        pdf.set_font("Arial", 'B', 12)
         pdf.cell(40, 10, label + ":", ln=False)
         pdf.set_font("Arial", '', 12)
         pdf.cell(0, 10, str(value), ln=True)
 
-
+    # Customer and booking info
     write_label_value("Name", data['name'])
     write_label_value("Email", data['email'])
     write_label_value("Phone", data['phone_number'])
@@ -158,13 +156,12 @@ def generate_receipt_pdf(data):
     write_label_value("Deadline", data['deadline'])
     write_label_value("Currency", data['currency'])
 
-    # Format price with symbol
-    # Format price with symbol
-    symbol = "$" if data['currency'] == 'USD' else "NGN"
-    price_str = f"{symbol} {data['price']:,.0f}"
-    pdf.cell(0, 10, price_str, ln=True)
+    # Format and show price
+    symbol = "$" if data['currency'] == 'USD' else "₦"
+    price_str = f"{symbol}{data['price']:,.2f}"
+    write_label_value("Price", price_str)
 
-    # New fields: Payment option and payment status
+    # Payment information
     payment_option = data.get('payment_option', 'N/A')
     payment_status = data.get('payment_status', 'N/A')
     amount_paid = data.get('amount_paid', 0)
@@ -176,25 +173,23 @@ def generate_receipt_pdf(data):
 
     pdf.ln(5)
 
-    # Details section (multi cell for longer text)
+    # Additional details
     if data.get("details"):
-        
-        pdf.set_font("Arial", '', 12)
+        pdf.set_font("Arial", 'B', 12)
         pdf.cell(0, 10, "Details:", ln=True)
-        
         pdf.set_font("Arial", '', 12)
         pdf.multi_cell(0, 10, data['details'])
-     # Optional: Add a footer line or thank you note
+
+    # Footer
     pdf.ln(10)
-    
-    pdf.set_font("Arial", '', 12)
+    pdf.set_font("Arial", 'I', 12)
     pdf.cell(0, 10, "Thank you for your booking!", ln=True, align='C')
-   
+
+    # Output as PDF in memory
     buffer = BytesIO()
     pdf.output(buffer)
     buffer.seek(0)
     return buffer.read()
-   
 # for rediction to admin dashbooard
 if "logged_in" not in st.session_state:
     st.session_state.logged_in = False
