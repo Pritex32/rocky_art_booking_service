@@ -114,19 +114,18 @@ def generate_receipt_pdf(data):
     pdf.add_page()
      # Title - bold and larger font
    
-    pdf.add_font("DejaVu", "", "DejaVuSans.ttf", uni=True)
-    pdf.set_font("DejaVu", "", 14)
+    pdf.set_font("Arial", 'B', 16)
 
     pdf.cell(200, 10, txt="Rocky Art Booking Receipt", ln=True, align='C')
     # Date Issued
-    pdf.set_font("DejaVu", '', 12)
+     pdf.set_font("Arial", '', 12)
     pdf.cell(200, 10, txt=f"Date Issued: {date.today()}", ln=True)
     pdf.ln(5)
      # Customer info - label bold, info normal
     def write_label_value(label, value):
-        pdf.set_font("DejaVu", '', 12)
+        p pdf.set_font("Arial", '', 12)
         pdf.cell(40, 10, f"{label}:")
-       
+         pdf.set_font("Arial", '', 12)
         pdf.cell(0, 10, str(value), ln=True)
     write_label_value("Name", data['name'])
     write_label_value("Email", data['email'])
@@ -137,7 +136,7 @@ def generate_receipt_pdf(data):
     write_label_value("Currency", data['currency'])
 
     # Format price with symbol
-    symbol = "$" if data['currency'] == 'USD' else "₦"
+    symbol = "$" if data['currency'] == 'USD' else "NGN"
     price_str = f"{symbol}{data['price']:,.2f}"
     write_label_value("Price", price_str)
     # New fields: Payment option and payment status
@@ -154,13 +153,13 @@ def generate_receipt_pdf(data):
 
     # Details section (multi cell for longer text)
     if data.get("details"):
-        pdf.set_font("DejaVu", '', 12)
+        pdf.set_font("Arial", '', 12)
         pdf.cell(0, 10, "Details:", ln=True)
-        pdf.set_font("DejaVu", '', 12)
+        pdf.set_font("Arial", '', 12)
         pdf.multi_cell(0, 10, data['details'])
      # Optional: Add a footer line or thank you note
     pdf.ln(10)
-    pdf.set_font("DejaVu", '', 12)
+    pdf.set_font("Arial", '', 12)
     pdf.cell(0, 10, "Thank you for your booking!", ln=True, align='C')
    
     buffer = BytesIO()
