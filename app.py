@@ -144,12 +144,10 @@ def generate_receipt_pdf(data):
     pdf.ln(5)
      # Customer info - label bold, info normal
     def write_label_value(label, value):
-        
         pdf.set_font("Arial", '', 12)
-        pdf.cell(40, 10, sanitize_output(label) + ":", ln=False)
-        
+        pdf.cell(40, 10, label + ":", ln=False)
         pdf.set_font("Arial", '', 12)
-        pdf.cell(0, 10, sanitize_output(value), ln=True)
+        pdf.cell(0, 10, str(value), ln=True)
 
 
     write_label_value("Name", data['name'])
@@ -165,7 +163,6 @@ def generate_receipt_pdf(data):
     symbol = "$" if data['currency'] == 'USD' else "NGN"
     price_str = f"{symbol} {data['price']:,.0f}"
     pdf.cell(0, 10, price_str, ln=True)
-
 
     # New fields: Payment option and payment status
     payment_option = data.get('payment_option', 'N/A')
