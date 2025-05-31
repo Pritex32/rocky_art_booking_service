@@ -129,19 +129,25 @@ def generate_receipt_pdf(data):
     pdf = FPDF()
     pdf.add_page()
      # Title - bold and larger font
-   
-    pdf.set_font("Arial", 'B', 16)
+ # Load Unicode font
+    pdf.add_font("DejaVu", "", "ttf", uni=True)
+    pdf.set_font("DejaVu", "", 16)
+ 
+
 
     pdf.cell(200, 10, txt="Rocky Art Booking Receipt", ln=True, align='C')
     # Date Issued
-    pdf.set_font("Arial", '', 12)
+    
+    pdf.set_font("DejaVu", "", 12)
     pdf.cell(200, 10, txt=f"Date Issued: {date.today()}", ln=True)
     pdf.ln(5)
      # Customer info - label bold, info normal
     def write_label_value(label, value):
-        pdf.set_font("Arial", '', 12)
+        
+        pdf.set_font("DejaVu", "", 12)
         pdf.cell(40, 10, sanitize_output(label) + ":", ln=False)
-        pdf.set_font("Arial", '', 12)
+        
+        pdf.set_font("DejaVu", "", 12)
         pdf.cell(0, 10, sanitize_output(value), ln=True)
 
 
@@ -174,13 +180,16 @@ def generate_receipt_pdf(data):
 
     # Details section (multi cell for longer text)
     if data.get("details"):
-        pdf.set_font("Arial", '', 12)
+        
+        pdf.set_font("DejaVu", "", 12)
         pdf.cell(0, 10, "Details:", ln=True)
-        pdf.set_font("Arial", '', 12)
+        
+        pdf.set_font("DejaVu", "", 12)
         pdf.multi_cell(0, 10, data['details'])
      # Optional: Add a footer line or thank you note
     pdf.ln(10)
-    pdf.set_font("Arial", '', 12)
+    
+    pdf.set_font("DejaVu", "", 12)
     pdf.cell(0, 10, "Thank you for your booking!", ln=True, align='C')
    
     buffer = BytesIO()
