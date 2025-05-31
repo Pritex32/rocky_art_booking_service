@@ -124,10 +124,6 @@ class PDF(FPDF):
         self.set_text_color(128)
         self.cell(0, 10, '© 2025 Rocky Art Company. All rights reserved.', 0, 0, 'C')
         # to ensure that this symbol # is replace everywhere in this code
-def sanitize_output(price_str):
-    if not isinstance(text, str):
-        text = str(text)
-    return text.replace("₦", "NGN").encode("ascii", "ignore").decode()
 
 
 def generate_receipt_pdf(data):
@@ -166,7 +162,7 @@ def generate_receipt_pdf(data):
 
     # Format price with symbol
     # Format price with symbol
-    symbol = "$" if data['currency'] == 'USD' else ""
+    symbol = "$" if data['currency'] == 'USD' else "NGN"
     price_str = f"{symbol} {data['price']:,.0f}"
     pdf.cell(0, 10, price_str, ln=True)
 
@@ -443,7 +439,7 @@ if choice == "Book a Service":
         def format_service(service_name):
             price = convert_price(services_usd[service_name], currency)
             price_str = f"{service_name} - {symbol}{price:,.0f}"
-            return sanitize_output(price_str)
+            return price_str
 
         service = st.selectbox("Select Service", options=list(services_usd.keys()), format_func=format_service)
 
@@ -470,9 +466,8 @@ if choice == "Book a Service":
 
         # Format display strings
         amount_to_pay_str = sanitize_output(f"{symbol} {amount_to_pay:,.0f}")
-        total_price_str = sanitize_output(f"{symbol} {price:,.0f}")
-        price_str = sanitize_output(f"{symbol} {price:,.0f}")
-
+        total_price_str = f"{symbol} {price:,.0f}"  # Removed sanitize_output
+        price_str = f"{symbol} {price:,.0f}" 
         # Display on screen
         st.markdown(f"**Amount to Pay Now:** {amount_to_pay_str}")
         st.markdown(f"**Total Price:** {total_price_str}")
