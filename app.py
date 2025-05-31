@@ -122,11 +122,11 @@ class PDF(FPDF):
 def sanitize_output(price_str):
     if not isinstance(text, str):
         text = str(text)
-    return text.encode("ascii", "ignore").decode()
+    return text.replace("₦", "NGN").encode("ascii", "ignore").decode())
 
 
 def generate_receipt_pdf(data):
-    pdf = PDF()
+    pdf = FPDF()
     pdf.add_page()
      # Title - bold and larger font
    
