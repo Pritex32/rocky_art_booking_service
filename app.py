@@ -150,8 +150,9 @@ def generate_receipt_pdf(data):
     # Format price with symbol
     symbol = "$" if data['currency'] == 'USD' else "NGN"
     price_str = f"{data['currency']} {data['price']:,.0f}"  # Outputs "NGN 10,000"
+    pdf.cell(0, 10, price_str, ln=True)
 
-    write_label_value("Price", price_str)
+
     # New fields: Payment option and payment status
     payment_option = data.get('payment_option', 'N/A')
     payment_status = data.get('payment_status', 'N/A')
