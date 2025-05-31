@@ -203,13 +203,13 @@ def send_email(to, subject, body):
 
 
 # get booking table
-def get_booking_by_id(booking_id):
-    response = supabase.table("bookings").select("*").eq("id", booking_id).execute()
+def get_all_bookings():
+    response = supabase.table("bookings").select("*").execute()
     if response.data:
         return pd.DataFrame(response.data)
     else:
-        return pd.DataFrame()  #
-         
+        return pd.DataFrame()  # Return empty DataFrame if no data
+
 
 
 
@@ -569,8 +569,8 @@ elif choice == "Admin Dashboard":
     if password == "rockyadmin123":  # Change your admin password here!
         st.success("Access granted")
         # Fetch bookings
-        with st.expander('My Data'):
-            df=get_booking_by_id(booking_id)
+        with st.expander("📋 View All Bookings"):
+            df=get_all_bookings()
             if not df.empty:
                 st.dataframe(df)
             else:
