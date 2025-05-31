@@ -87,7 +87,6 @@ def list_files_in_bucket(bucket_name):
         return []
     return data
 
-
         
 # to inittialize payment with paystack
 def initialize_payment(email, amount):
