@@ -100,7 +100,7 @@ def initialize_payment(email, amount):
 
 
 
-
+df=get_booking_by_id(booking_id)
 
 def generate_receipt_pdf(data):
     pdf = FPDF()
@@ -208,10 +208,10 @@ def send_email(to, subject, body):
 def get_booking_by_id(booking_id):
     response = supabase.table("bookings").select("*").eq("id", booking_id).execute()
     if response.data:
-        return response.data[0]
+        return pd.DataFrame(response.data)
     else:
-        print("Booking not found.")
-        return None
+        return pd.DataFrame()  #
+         
 
 # To send automatic mail and WhatsApp messages
 def send_notifications(bookings):
@@ -568,6 +568,14 @@ elif choice == "Admin Dashboard":
     if password == "rockyadmin123":  # Change your admin password here!
         st.success("Access granted")
         # Fetch bookings
+        with st.expander('My Data'):
+            df=get_booking_by_id(booking_id)
+            if not df.empty:
+                st.dataframe(df)
+            else:
+                st.write("Booking not found.")
+
+       
         response = supabase.table("bookings").select("*").order("created_at", desc=True).execute()
         if response.data:
             bookings = response.data
