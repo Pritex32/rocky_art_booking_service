@@ -127,7 +127,7 @@ class PDF(FPDF):
 
 
 # for receipt generation
-    def generate_receipt_pdf(data):
+def generate_receipt_pdf(data):
     pdf = FPDF()
     pdf.add_page()
 
@@ -190,6 +190,9 @@ class PDF(FPDF):
     pdf.output(buffer)
     buffer.seek(0)
     return buffer.read()
+    
+
+
 # for rediction to admin dashbooard
 if "logged_in" not in st.session_state:
     st.session_state.logged_in = False
