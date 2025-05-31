@@ -212,7 +212,6 @@ def get_booking_by_id(booking_id):
          
 
 
-df=get_booking_by_id()
 
 
 # To send automatic mail and WhatsApp messages
