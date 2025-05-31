@@ -81,11 +81,15 @@ def upload_file_to_supabase(file, bucket_name="bookingsbucket"):
 
 # to views files from storage
 def list_files_in_bucket(bucket_name):
-    response = supabase.storage.from_(bucket_name).list()
-    if response.data:
-        return response.data
+    data, error = supabase.storage.from_(bucket_name).list()
+    if error:
+        st.error(f"Error listing files: {error.message}")
+        return []
+    if data:
+        return data
     else:
         return []
+
         
 # to inittialize payment with paystack
 def initialize_payment(email, amount):
