@@ -120,9 +120,9 @@ class PDF(FPDF):
         self.cell(0, 10, '© 2025 Rocky Art Company. All rights reserved.', 0, 0, 'C')
         # to ensure that this symbol # is replace everywhere in this code
 def sanitize_output(price_str):
-    if isinstance(price_str):
-        return price_str.replace("#", "NGN").replace("₦", "NGN")
-    return price_str
+    if not isinstance(text, str):
+        text = str(text)
+    return text.encode("ascii", "ignore").decode()
 
 
 def generate_receipt_pdf(data):
@@ -140,9 +140,10 @@ def generate_receipt_pdf(data):
      # Customer info - label bold, info normal
     def write_label_value(label, value):
         pdf.set_font("Arial", '', 12)
-        pdf.cell(40, 10, f"{label}:")
+        pdf.cell(40, 10, sanitize_output(label) + ":", ln=False)
         pdf.set_font("Arial", '', 12)
-        pdf.cell(0, 10, sanitize_output(str(value)), ln=True)
+        pdf.cell(0, 10, sanitize_output(value), ln=True)
+
 
     write_label_value("Name", data['name'])
     write_label_value("Email", data['email'])
