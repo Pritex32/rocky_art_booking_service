@@ -465,9 +465,10 @@ if choice == "Book a Service":
             payment_status = "Paid"
 
         # Format display strings
-        amount_to_pay_str = sanitize_output(f"{symbol} {amount_to_pay:,.0f}")
-        total_price_str = f"{symbol} {price:,.0f}"  # Removed sanitize_output
-        price_str = f"{symbol} {price:,.0f}" 
+        amount_to_pay_str = f"{symbol} {amount_to_pay:,.0f}"
+        total_price_str = f"{symbol} {price:,.0f}"
+        price_str = f"{symbol} {price:,.0f}"
+
         # Display on screen
         st.markdown(f"**Amount to Pay Now:** {amount_to_pay_str}")
         st.markdown(f"**Total Price:** {total_price_str}")
