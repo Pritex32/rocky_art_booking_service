@@ -85,10 +85,8 @@ def list_files_in_bucket(bucket_name):
     if error:
         st.error(f"Error listing files: {error}")  # Just use error directly
         return []
-    if data:
-        return data
-    else:
-        return []
+    return data
+    
 
 
         
@@ -595,12 +593,10 @@ elif choice == "Admin Dashboard":
             if files:
                 for file in files:
                     file_name = file['name']
-                    file_path = f"{bucket_name}/{file_name}"
-                    # Generate public URL (if your bucket is public)
-                    public_url = supabase.storage.from_(bucket_name).get_public_url(file_name)
-               
-                    st.markdown(f"- [{file_name}]({public_url})")
-            # Optionally, show file preview if image or pdf, etc.
+                     # Create a download URL (assuming public bucket or using signed URL method)
+                    url = supabase.storage.from_(bucket_name).get_public_url(filename)
+                    st.markdown(f"[{filename}]({url})")
+                                                 
             else:
                 st.write("No files found in the bucket.")
 
