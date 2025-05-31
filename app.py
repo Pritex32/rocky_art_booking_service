@@ -78,6 +78,14 @@ def upload_file_to_supabase(file, bucket_name="bookingsbucket"):
     except Exception as e:
         st.error(f"Exception during file upload: {e}")
         return None
+
+# to views files from storage
+def list_files_in_bucket(bucket_name):
+    response = supabase.storage.from_(bucket_name).list()
+    if response.data:
+        return response.data
+    else:
+        return []
         
 # to inittialize payment with paystack
 def initialize_payment(email, amount):
@@ -575,6 +583,21 @@ elif choice == "Admin Dashboard":
                 st.dataframe(df)
             else:
                 st.write("Booking not found.")
+
+        with st.expander("📁 Files in Storage Bucket"):
+            bucket_name = "bookingsbucket"
+            files = list_files_in_bucket(bucket_name)  
+            if files:
+                for file in files:
+                    file_name = file['name']
+                    file_path = f"{bucket_name}/{file_name}"
+                    # Generate public URL (if your bucket is public)
+                    public_url = supabase.storage.from_(bucket_name).get_public_url(file_name)
+               
+                    st.markdown(f"- [{file_name}]({public_url})")
+            # Optionally, show file preview if image or pdf, etc.
+            else:
+                st.write("No files found in the bucket.")
 
        
         response = supabase.table("bookings").select("*").order("created_at", desc=True).execute()
