@@ -416,7 +416,7 @@ if choice == "Book a Service":
         # Show services with price in selected currency
         def format_service(service_name):
             price = convert_price(services_usd[service_name], currency)
-            symbol = "$" if currency == "USD" else "₦"
+            symbol = "$" if currency == "USD" else "NGN"
             return f"{service_name} - {symbol}{price:,.0f}"
 
         service = st.selectbox("Select Service", options=list(services_usd.keys()), format_func=format_service)
@@ -431,7 +431,7 @@ if choice == "Book a Service":
         reference_url = st.text_input("Or enter a Reference URL (optional)")
 
         price = convert_price(services_usd[service], currency)
-        symbol = "$" if currency == "USD" else "₦"
+        symbol = "$" if currency == "USD" else "NGN"
 
         payment_option = st.radio("Payment Option", ["Full Payment", "50% Deposit"])
         if payment_option == "50% Deposit":
