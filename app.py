@@ -428,20 +428,22 @@ choice = st.session_state.menu_page
 
 if choice == "Book a Service":
     st.header("Submit a Booking")
-    
+
     with st.form("booking_form"):
         name = st.text_input("Full Name")
         email = st.text_input("Email")
-        phone_number = st.text_input('Phone_number', value=0)
+        phone_number = st.text_input('Phone_number', value="")  # Changed default from 0 to empty string
         currency = st.selectbox("Select Currency", ["USD", "NGN"])
         location = st.text_input('Location', value='London')
+
+        # Set symbol before it's used in format_service
+        symbol = "$" if currency == "USD" else "NGN"
 
         # Show services with price in selected currency
         def format_service(service_name):
             price = convert_price(services_usd[service_name], currency)
             price_str = f"{service_name} - {symbol}{price:,.0f}"
             return sanitize_output(price_str)
-            
 
         service = st.selectbox("Select Service", options=list(services_usd.keys()), format_func=format_service)
 
@@ -454,6 +456,7 @@ if choice == "Book a Service":
         # URL input for reference link
         reference_url = st.text_input("Or enter a Reference URL (optional)")
 
+        # Price calculations
         price = convert_price(services_usd[service], currency)
         symbol = "$" if currency == "USD" else "NGN"
 
@@ -464,11 +467,11 @@ if choice == "Book a Service":
         else:
             amount_to_pay = price
             payment_status = "Paid"
+
         # Format display strings
-        amount_to_pay_str = sanitize_ouput(f"{symbol} {amount_to_pay:,.0f}")
+        amount_to_pay_str = sanitize_output(f"{symbol} {amount_to_pay:,.0f}")
         total_price_str = sanitize_output(f"{symbol} {price:,.0f}")
         price_str = sanitize_output(f"{symbol} {price:,.0f}")
-
 
         # Display on screen
         st.markdown(f"**Amount to Pay Now:** {amount_to_pay_str}")
@@ -531,7 +534,6 @@ if choice == "Book a Service":
                 else:
                     st.session_state.booking_submitted = False
                     error_message = getattr(error, "message", str(error))
-    
                    
                 
     col1, col2 = st.columns(2)
