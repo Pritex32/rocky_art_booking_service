@@ -83,10 +83,9 @@ def upload_file_to_supabase(file, bucket_name="bookingsbucket"):
 def list_files_in_bucket(bucket_name):
     data, error = supabase.storage.from_(bucket_name).list()
     if error:
-        st.error(f"Error listing files: {error}")  # Just use error directly
+        st.error(f"Error listing files: {error}")
         return []
     return data
-    
 
 
         
@@ -591,14 +590,14 @@ elif choice == "Admin Dashboard":
             bucket_name = "bookingsbucket"
             files = list_files_in_bucket(bucket_name)  
             if files:
-                for file in files:
-                    file_name = file['name']
-                     # Create a download URL (assuming public bucket or using signed URL method)
-                    url = supabase.storage.from_(bucket_name).get_public_url(filename)
-                    st.markdown(f"[{filename}]({url})")
-                                                 
+                # Convert list of dicts to DataFrame to show as a table
+                df = pd.DataFrame(files)
+                st.dataframe(df)
             else:
-                st.write("No files found in the bucket.")
+                st.write("No files found in bucket.")
+
+                                                 
+            
 
        
         response = supabase.table("bookings").select("*").order("created_at", desc=True).execute()
