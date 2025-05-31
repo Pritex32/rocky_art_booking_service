@@ -306,7 +306,7 @@ services_usd = {
 
 # Currency conversion rate
 USD_TO_NGN = get_usd_to_ngn_rate()
-st.info(f"Current USD to NGN rate: ₦{USD_TO_NGN}")  # Fixed variable name
+st.info(f"Current USD to NGN rate: NGN{USD_TO_NGN}")  # Fixed variable name
 
 def convert_price(price_usd, currency):
     if currency == "NGN":
