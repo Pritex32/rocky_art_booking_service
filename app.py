@@ -53,25 +53,10 @@ def get_supabase_client():
 # Initialize Supabase client
 supabase = get_supabase_client() # use this to call the supabase database
 
-# forex data download section with time and cache from2021 till present
-# Load logos
-priscomac_logo = Image.open("IMG-20250531-WA0006.jpg")
-bitcoin_logo = Image.open('logo__rockyart.png')
-priscomac_resize=priscomac_logo.resize((300,100))
-btc_resize=bitcoin_logo.resize((300,100))
 
 
-# Create two columns: Priscomac on the left, Bitcoin on the right
-col1, col2,col3 = st.columns(3)  # 3:1 ratio for prominence
 
-with col1:
-    st.image(priscomac_resize, width=200)  # Adjust width as needed
-with col2:
-    st.subheader('Rocky Art Booking System')
-     
 
-with col3:
-    st.image(btc_resize, width=80)  # Smaller to indicate supported asset
 
 
 def upload_file_to_supabase(file, bucket_name="bookingsbucket"):
@@ -420,14 +405,14 @@ if "show_receipt_button" not in st.session_state:
     st.session_state.show_receipt_button = False
 
 
-col1,col2=st.columns(2)
+col1,col2=st.columns([3,1])
 with col1:
-    st.title("🎨 Rocky Art Company Booking System")
+    st.title("🎨 Rocky Art Booking System")
 with col2:
     image='logo__rockyart.png'
     img=Image.open(image)
     resize_img=img.resize((100,100))
-    st.write(resize_img)
+    st.write(resize_img,width=100)
 
 menu = ["Book a Service","Admin Login/Register", "Admin Dashboard"]
 # Show dropdown only if not logged in or if not on admin dashboard
