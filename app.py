@@ -105,7 +105,19 @@ def initialize_payment(email, amount):
     }
     res = requests.post("https://api.paystack.co/transaction/initialize", headers=headers, json=data)
     return res.json()
+# to add company logo
+class PDF(FPDF):
+    def footer(self):
+        # Position footer 20 units from bottom
+        self.set_y(-20)
 
+        # Add logo to the left
+        self.image('assets/logo.png', x=10, y=self.get_y(), w=20)
+
+        # Add footer text centered
+        self.set_font('Arial', 'I', 8)
+        self.set_text_color(128)
+        self.cell(0, 10, '© 2025 Rocky Art Company. All rights reserved.', 0, 0, 'C')
 
 
 
