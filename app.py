@@ -100,8 +100,6 @@ def initialize_payment(email, amount):
 
 
 
-df=get_booking_by_id(booking_id)
-
 def generate_receipt_pdf(data):
     pdf = FPDF()
     pdf.add_page()
@@ -212,6 +210,10 @@ def get_booking_by_id(booking_id):
     else:
         return pd.DataFrame()  #
          
+
+
+df=get_booking_by_id(booking_id)
+
 
 # To send automatic mail and WhatsApp messages
 def send_notifications(bookings):
