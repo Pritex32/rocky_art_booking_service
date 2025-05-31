@@ -122,7 +122,7 @@ class PDF(FPDF):
 
 
 def generate_receipt_pdf(data):
-    pdf = FPDF()
+    pdf = PDF()
     pdf.add_page()
      # Title - bold and larger font
    
