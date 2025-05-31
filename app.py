@@ -118,7 +118,11 @@ class PDF(FPDF):
         self.set_font('Arial', 'I', 8)
         self.set_text_color(128)
         self.cell(0, 10, '© 2025 Rocky Art Company. All rights reserved.', 0, 0, 'C')
-
+        # to ensure that this symbol # is replace everywhere in this code
+def sanitize_output(text):
+    if isinstance(text, str):
+        return text.replace("₦", "").replace("NGN", "")
+    return text
 
 
 def generate_receipt_pdf(data):
@@ -138,7 +142,8 @@ def generate_receipt_pdf(data):
         pdf.set_font("Arial", '', 12)
         pdf.cell(40, 10, f"{label}:")
         pdf.set_font("Arial", '', 12)
-        pdf.cell(0, 10, str(value), ln=True)
+        pdf.cell(0, 10, sanitize_output(str(value)), ln=True)
+
     write_label_value("Name", data['name'])
     write_label_value("Email", data['email'])
     write_label_value("Phone", data['phone_number'])
@@ -149,7 +154,7 @@ def generate_receipt_pdf(data):
 
     # Format price with symbol
     # Format price with symbol
-    symbol = "$" if data['currency'] == 'USD' else "NGN"
+    symbol = "$" if data['currency'] == 'USD' else ""
     price_str = f"{symbol} {data['price']:,.0f}"
     pdf.cell(0, 10, price_str, ln=True)
 
@@ -274,10 +279,10 @@ Customer Service Team
         print("Email failed to send.")
     return email_sent
 
-   
+@st.cache_data(ttl=7200) 
 def get_usd_to_ngn_rate():
     API_KEY = "d25a9a667870cb6fe7c611ba"  # Put your actual API key here or store as env var
-    url=f" https://v6.exchangerate-api.com/v6/d25a9a667870cb6fe7c611ba/latest/USD"
+    url=f"https://v6.exchangerate-api.com/v6/d25a9a667870cb6fe7c611ba/latest/USD"
     try:
         response = requests.get(url)
         data = response.json()
