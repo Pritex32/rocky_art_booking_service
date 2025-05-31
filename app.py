@@ -444,9 +444,9 @@ if choice == "Book a Service":
             amount_to_pay = price
             payment_status = "Paid"
 
-        st.markdown(f"**Amount to Pay Now:** {symbol}{amount_to_pay:,.0f}")
-        st.markdown(f"**Total Price:** {symbol}{price:,.0f}") 
-        st.markdown(f"**Price:** {symbol}{price:,.0f}")
+        st.markdown(f"**Amount to Pay Now:** {symbol} {amount_to_pay:,.0f}")
+        st.markdown(f"**Total Price:** {symbol} {price:,.0f}")
+        st.markdown(f"**Price:** {symbol} {price:,.0f}")
 
         submitted = st.form_submit_button("Submit Booking")
 
