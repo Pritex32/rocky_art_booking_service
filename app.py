@@ -112,7 +112,7 @@ class PDF(FPDF):
         self.set_y(-20)
 
         # Add logo to the left
-        self.image('assets/logo.png', x=10, y=self.get_y(), w=20)
+        self.image('logo__rockyart.png', x=10, y=self.get_y(), w=20)
 
         # Add footer text centered
         self.set_font('Arial', 'I', 8)
@@ -130,14 +130,14 @@ def generate_receipt_pdf(data):
 
     pdf.cell(200, 10, txt="Rocky Art Booking Receipt", ln=True, align='C')
     # Date Issued
-     pdf.set_font("Arial", '', 12)
+    pdf.set_font("Arial", '', 12)
     pdf.cell(200, 10, txt=f"Date Issued: {date.today()}", ln=True)
     pdf.ln(5)
      # Customer info - label bold, info normal
     def write_label_value(label, value):
-        p pdf.set_font("Arial", '', 12)
+        pdf.set_font("Arial", '', 12)
         pdf.cell(40, 10, f"{label}:")
-         pdf.set_font("Arial", '', 12)
+        pdf.set_font("Arial", '', 12)
         pdf.cell(0, 10, str(value), ln=True)
     write_label_value("Name", data['name'])
     write_label_value("Email", data['email'])
