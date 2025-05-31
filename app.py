@@ -148,8 +148,9 @@ def generate_receipt_pdf(data):
     write_label_value("Currency", data['currency'])
 
     # Format price with symbol
+    # Format price with symbol
     symbol = "$" if data['currency'] == 'USD' else "NGN"
-    price_str = f"{data['currency']} {data['price']:,.0f}"  # Outputs "NGN 10,000"
+    price_str = f"{symbol} {data['price']:,.0f}"
     pdf.cell(0, 10, price_str, ln=True)
 
 
