@@ -114,6 +114,8 @@ def generate_receipt_pdf(data):
     pdf.add_page()
      # Title - bold and larger font
     pdf.set_font("Arial", 'B', 16)
+    pdf.add_font("DejaVu", "", "DejaVuSans.ttf", uni=True)
+    pdf.set_font("DejaVu", "", 14)
 
     pdf.cell(200, 10, txt="Rocky Art Booking Receipt", ln=True, align='C')
     # Date Issued
