@@ -5,14 +5,17 @@ st.set_page_config(
     layout='wide'
 )
 # to hide streamlit icons
-hide_footer = """
+hide_streamlit_style = """
     <style>
-        footer {visibility: hidden;}
-        #MainMenu {visibility: hidden;}
-        header {visibility: hidden;}
+    #MainMenu {visibility: hidden;}
+    footer {visibility: hidden;}
+    footer:after {content:'';}
+    header {visibility: hidden;}
+    .css-164nlkn.egzxvld1 {visibility: hidden;}  /* Streamlit footer class */
     </style>
 """
-st.markdown(hide_footer, unsafe_allow_html=True)
+st.markdown(hide_streamlit_style, unsafe_allow_html=True)
+
 
 # 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
 import bcrypt
