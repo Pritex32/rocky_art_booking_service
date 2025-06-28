@@ -3,6 +3,15 @@ st.set_page_config(
     page_title='Rocky_art_bookings',
     page_icon='👋 ',
 )
+# to hide streamlit icons
+hide_footer = """
+    <style>
+        footer {visibility: hidden;}
+        #MainMenu {visibility: hidden;}
+        header {visibility: hidden;}
+    </style>
+"""
+st.markdown(hide_footer, unsafe_allow_html=True)
 
 # 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
 import bcrypt
