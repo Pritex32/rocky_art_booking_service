@@ -2,6 +2,7 @@ import streamlit as st
 st.set_page_config(
     page_title='Rocky_art_bookings',
     page_icon='👋 ',
+    layout='wide'
 )
 # to hide streamlit icons
 hide_footer = """
